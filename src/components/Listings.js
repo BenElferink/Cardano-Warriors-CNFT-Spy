@@ -38,7 +38,9 @@ function Listings({ title, options }) {
         {data.length ? (
           data.map((listing) => <ListItem key={listing._id} listing={listing} />)
         ) : (
-          <CircularProgress color='secondary' />
+          <div style={{ width: '100%', display: 'grid', placeItems: 'center' }}>
+            <CircularProgress color='secondary' />
+          </div>
         )}
       </div>
     </div>
