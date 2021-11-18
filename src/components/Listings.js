@@ -31,7 +31,7 @@ function Listings({ title, options }) {
 
   return (
     <div className='listings-container'>
-      <Typography variant='h4' component='div' sx={{ margin: '1rem 0' }}>
+      <Typography variant='h4' component='div' sx={{ margin: '1rem 0', fontFamily: 'IndieFlower', fontWeight: 'bold', color: 'whitesmoke', textShadow: '-1px 1px 3px black' }}>
         {title}
       </Typography>
       <div className='list'>
@@ -61,7 +61,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 
 function ListItem({ listing }) {
   return (
-    <Card sx={{ margin: '1rem 2rem', overflow: 'visible' }}>
+    <Card sx={{ margin: '1rem 2rem', borderRadius: '1rem', overflow: 'visible' }}>
       <HtmlTooltip
         followCursor
         title={

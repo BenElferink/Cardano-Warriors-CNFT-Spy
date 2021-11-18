@@ -1,3 +1,8 @@
+@font-face {
+  font-family: IndieFlower;
+  src: url('./assets/fonts/IndieFlower-Regular.ttf');
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,6 +14,8 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: url('./assets/images/cw-bg.png') no-repeat center;
+  background-size: cover;
 }
 
 code {
@@ -16,10 +23,13 @@ code {
 }
 
 .App {
+  width: 100vw;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  -webkit-backdrop-filter: blur(11px);
+  backdrop-filter: blur(11px);
 }
 
 .listings-container {
@@ -36,6 +46,7 @@ code {
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  cursor: all-scroll;
 }
 .list::-webkit-scrollbar {
   display: none;
@@ -44,6 +55,7 @@ code {
 .list img {
   width: 200px !important;
   height: 200px !important;
+  border-radius: 1rem 1rem 0 0 !important;
 }
 
 .icon-wrapper {
