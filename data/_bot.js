@@ -1,6 +1,7 @@
 const cron = require('node-cron')
 const Axios = require('axios')
 const fs = require('fs')
+const { exec } = require('child_process')
 const warriorsData = require('./warriors.json')
 
 const ENDPOINT = 'https://api.cnft.io/market/listings'
@@ -28,6 +29,12 @@ const crawlCNFT = (options = {}) => {
 
 async function runCronJob() {
   console.log('running cron job')
+
+  // manage git pull
+  const gitPull = exec('cd .. && git fetch && git pull --no-rebase')
+  if (gitPull.error) return console.log(`child_process error: ${gitPull.error.message}`)
+  if (gitPull.stderr) return console.log(`child_process stderr: ${gitPull.stderr}`)
+  console.log(`child_process stdout: ${gitPull.stdout}`)
 
   let page = 0
   let lastSearchedIndex = 0
@@ -101,7 +108,11 @@ async function runCronJob() {
     }
   }
 
-  // TODO: manage git
+  // manage git push
+  const gitPush = exec('cd .. && git add data/floor-data.json && git commit -m "🤖 BOT: updated database" && git push')
+  if (gitPush.error) return console.log(`child_process error: ${gitPush.error.message}`)
+  if (gitPush.stderr) return console.log(`child_process stderr: ${gitPush.stderr}`)
+  console.log(`child_process stdout: ${gitPush.stdout}`)
 
   console.log('cron job finished')
 }
