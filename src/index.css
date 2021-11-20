@@ -1,3 +1,7 @@
+:root {
+  --blue: #3ba4ec;
+}
+
 @font-face {
   font-family: IndieFlower;
   src: url('./assets/fonts/IndieFlower-Regular.ttf');
@@ -10,10 +14,11 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--blue);
   background: url('./assets/images/cw-bg.png') no-repeat center;
   background-size: cover;
 }

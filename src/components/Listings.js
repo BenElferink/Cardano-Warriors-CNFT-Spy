@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { tooltipClasses } from '@mui/material/Tooltip'
 import {
@@ -9,19 +9,56 @@ import {
   CircularProgress,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from '@mui/material'
 import { Favorite as FavoriteIcon, Visibility as VisibilityIcon } from '@mui/icons-material'
 import ADA_SYMBOL from '../constants/ADA_SYMBOL'
 import crawlCNFT from '../functions/cnft'
 
+const Loading = () => (
+  <div style={{ width: '100%', display: 'grid', placeItems: 'center' }}>
+    <CircularProgress color='secondary' />
+  </div>
+)
+
+const HtmlTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
+  ({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }),
+)
+
 function Listings({ title, options }) {
   const [data, setData] = useState([])
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const pageRef = useRef(1)
+  const isDesktop = useMediaQuery('(min-width: 768px)')
 
   useEffect(() => {
+    // keep looking for new data every 10 seconds
     const interval = setInterval(() => {
       crawlCNFT(options)
-        .then((warriors) => setData(warriors))
-        .catch((error) => console.error(error))
+        .then((warriors) => {
+          setData((prev) => {
+            // if there is no pre-fetched data, just return the current fetched data
+            if (!prev.length) return warriors
+            // a verification method to add only new data to the front of the array
+            const newWarriors = []
+            for (const currentWarrior of warriors) {
+              if (currentWarrior._id === prev[0]._id) break
+              newWarriors.push(currentWarrior)
+            }
+            return [...newWarriors, ...prev]
+          })
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }, 1000 * 10)
 
     return () => {
@@ -29,35 +66,57 @@ function Listings({ title, options }) {
     }
   }, [options])
 
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight, scrollLeft, clientWidth, scrollWidth } = e.target
+    const isScrolledToBottom = scrollTop === scrollHeight - clientHeight
+    const isScrolledToRight = scrollLeft === scrollWidth - clientWidth
+
+    // fetch next page of data when scrolled to bottom
+    if (!isLoadingMore && ((isDesktop && isScrolledToBottom) || (!isDesktop && isScrolledToRight))) {
+      pageRef.current += 1
+      setIsLoadingMore(true)
+      crawlCNFT({ ...options, page: pageRef.current })
+        .then((warriors) => {
+          setData((prev) => {
+            // a verification method to add only new data to the end of the array
+            const newWarriors = []
+            for (let i = warriors.length - 1; i >= 0; i--) {
+              const currentWarrior = warriors[i]
+              if (currentWarrior._id === prev[prev.length - 1]._id) break
+              newWarriors.unshift(currentWarrior)
+            }
+            return [...prev, ...newWarriors]
+          })
+          setIsLoadingMore(false)
+        })
+        .catch((error) => {
+          console.error(error)
+          setIsLoadingMore(false)
+        })
+    }
+  }
+
   return (
     <div className='listings-container'>
-      <Typography variant='h4' component='div' sx={{ margin: '1rem 0', fontFamily: 'IndieFlower', fontWeight: 'bold', color: 'whitesmoke', textShadow: '-1px 1px 3px black' }}>
+      <Typography
+        variant='h4'
+        component='div'
+        sx={{
+          margin: '1rem 0',
+          fontFamily: 'IndieFlower',
+          fontWeight: 'bold',
+          color: 'whitesmoke',
+          textShadow: '-1px 1px 3px black',
+        }}>
         {title}
       </Typography>
-      <div className='list'>
-        {data.length ? (
-          data.map((listing) => <ListItem key={listing._id} listing={listing} />)
-        ) : (
-          <div style={{ width: '100%', display: 'grid', placeItems: 'center' }}>
-            <CircularProgress color='secondary' />
-          </div>
-        )}
+      <div className='list' onScroll={handleScroll}>
+        {data.length ? data.map((listing) => <ListItem key={listing._id} listing={listing} />) : <Loading />}
+        {isLoadingMore && <Loading />}
       </div>
     </div>
   )
 }
-
-const HtmlTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
-}))
 
 function ListItem({ listing }) {
   return (
@@ -87,8 +146,7 @@ function ListItem({ listing }) {
             ))}
           </Fragment>
         }>
-        <CardActionArea
-          onClick={() => window.open(`https://cnft.io/token/${listing._id}`, '_blank')}>
+        <CardActionArea onClick={() => window.open(`https://cnft.io/token/${listing._id}`, '_blank')}>
           <CardMedia
             component='img'
             image={`https://ipfs.io/ipfs/${listing.asset.metadata.image.replace('ipfs://', '')}`}
@@ -102,9 +160,7 @@ function ListItem({ listing }) {
             <Typography variant='body2' color='text.secondary'>
               {listing.asset.metadata.name}
               <br />
-              <span style={{ fontSize: '0.7rem' }}>
-                Listed: {new Date(listing.createdAt).toLocaleString()}
-              </span>
+              <span style={{ fontSize: '0.7rem' }}>Listed: {new Date(listing.createdAt).toLocaleString()}</span>
               <br />
               <br />
               <span className='icon-wrapper'>
