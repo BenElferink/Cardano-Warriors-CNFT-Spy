@@ -32,10 +32,6 @@ function runCronJob() {
 
   // manage git pull
   exec('cd .. && git fetch && git pull --no-rebase', async (gitPullError, gitPullStdout, gitPullStderr) => {
-    if (gitPullError) return console.log(`child_process error: ${JSON.stringify(gitPullError)}`)
-    if (gitPullStderr) return console.log(`child_process stderr: ${JSON.stringify(gitPullStderr)}`)
-    console.log(`child_process stdout: ${JSON.stringify(gitPullStdout)}`)
-
     let page = 0
     let lastSearchedIndex = 0
     const preFetchedData = []
@@ -112,17 +108,13 @@ function runCronJob() {
     exec(
       'cd .. && git add data/floor-data.json && git commit -m "🤖 BOT: updated database" && git push',
       (gitPushError, gitPushStdout, gitPushStderr) => {
-        if (gitPushError) return console.log(`child_process error: ${JSON.stringify(gitPushError)}`)
-        if (gitPushStderr) return console.log(`child_process stderr: ${JSON.stringify(gitPushStderr)}`)
-        console.log(`child_process stdout: ${JSON.stringify(gitPushStdout)}`)
-
         console.log('cron job finished')
       },
     )
   })
 }
 
-cron.schedule('*/5 * * * *', runCronJob, {
+cron.schedule('* 0 * * *', runCronJob, {
   scheduled: true,
   timezone: 'Asia/Jerusalem',
 })
