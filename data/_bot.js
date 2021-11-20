@@ -27,97 +27,102 @@ const crawlCNFT = (options = {}) => {
   })
 }
 
-async function runCronJob() {
+function runCronJob() {
   console.log('running cron job')
 
   // manage git pull
-  const gitPull = exec('cd .. && git fetch && git pull --no-rebase')
-  if (gitPull.error) return console.log(`child_process error: ${gitPull.error.message}`)
-  if (gitPull.stderr) return console.log(`child_process stderr: ${gitPull.stderr}`)
-  console.log(`child_process stdout: ${gitPull.stdout}`)
+  exec('cd .. && git fetch && git pull --no-rebase', async (gitPullError, gitPullStderr, gitPullStdout) => {
+    if (gitPullError) return console.log(`child_process error: ${JSON.stringify(gitPullError)}`)
+    if (gitPullStderr) return console.log(`child_process stderr: ${JSON.stringify(gitPullStderr)}`)
+    console.log(`child_process stdout: ${JSON.stringify(gitPullStdout)}`)
 
-  let page = 0
-  let lastSearchedIndex = 0
-  const preFetchedData = []
+    let page = 0
+    let lastSearchedIndex = 0
+    const preFetchedData = []
 
-  const findFloor = (warriorType = '', index = 0) => {
-    console.log(`searching floor for type ${warriorType} from index ${index}`)
+    const findFloor = (warriorType = '', index = 0) => {
+      console.log(`searching floor for type ${warriorType} from index ${index}`)
 
-    // search pre-fetched data for floor price of this warrior type
-    // (reminder: data is fetched by sorted price, 1st item found is the floor)
-    for (let i = index; i < preFetchedData.length; i++) {
-      const preFetchedWarrior = preFetchedData[i]
-      if (warriorType === preFetchedWarrior.asset.metadata.type.toLowerCase()) {
-        return preFetchedWarrior
+      // search pre-fetched data for floor price of this warrior type
+      // (reminder: data is fetched by sorted price, 1st item found is the floor)
+      for (let i = index; i < preFetchedData.length; i++) {
+        const preFetchedWarrior = preFetchedData[i]
+        if (warriorType === preFetchedWarrior.asset.metadata.type.toLowerCase()) {
+          return preFetchedWarrior
+        }
       }
+
+      lastSearchedIndex = preFetchedData.length - 1
+      return null
     }
 
-    lastSearchedIndex = preFetchedData.length - 1
-    return null
-  }
+    // go through every warrior in the list
+    for (const warrior of warriorsData.warriors) {
+      lastSearchedIndex = 0
+      const thisType = warrior.type
+      let foundFloorForThisType = preFetchedData.length ? findFloor(thisType, lastSearchedIndex) : null
 
-  // go through every warrior in the list
-  for (const warrior of warriorsData.warriors) {
-    lastSearchedIndex = 0
-    const thisType = warrior.type
-    let foundFloorForThisType = preFetchedData.length ? findFloor(thisType, lastSearchedIndex) : null
+      while (!foundFloorForThisType) {
+        try {
+          // as long as the floor is not found, get more data from cnft
+          page++
+          console.log(`crawling cnft for type ${thisType} at page ${page}`)
+          const fetchedData = await crawlCNFT({ sort: { price: 1 }, page })
 
-    while (!foundFloorForThisType) {
-      try {
-        // as long as the floor is not found, get more data from cnft
-        page++
-        console.log(`crawling cnft for type ${thisType} at page ${page}`)
-        const fetchedData = await crawlCNFT({ sort: { price: 1 }, page })
-
-        // in case none are listed
-        if (!fetchedData.length && !foundFloorForThisType) {
-          foundFloorForThisType = { price: null }
-          break
-        }
-
-        if (preFetchedData.length) {
-          // a verification method to add only new data to the end of the array
-          const newWarriors = []
-          for (let i = fetchedData.length - 1; i >= 0; i--) {
-            if (fetchedData[i]._id === preFetchedData[preFetchedData.length - 1]._id) break
-            newWarriors.unshift(fetchedData[i])
+          // in case none are listed
+          if (!fetchedData.length && !foundFloorForThisType) {
+            foundFloorForThisType = { price: null }
+            break
           }
 
-          newWarriors.forEach((item) => preFetchedData.push(item))
-        } else {
-          fetchedData.forEach((item) => preFetchedData.push(item))
-        }
+          if (preFetchedData.length) {
+            // a verification method to add only new data to the end of the array
+            const newWarriors = []
+            for (let i = fetchedData.length - 1; i >= 0; i--) {
+              if (fetchedData[i]._id === preFetchedData[preFetchedData.length - 1]._id) break
+              newWarriors.unshift(fetchedData[i])
+            }
 
-        // after each time new data was recieved, search for the floor price again
-        foundFloorForThisType = findFloor(thisType, lastSearchedIndex)
+            newWarriors.forEach((item) => preFetchedData.push(item))
+          } else {
+            fetchedData.forEach((item) => preFetchedData.push(item))
+          }
+
+          // after each time new data was recieved, search for the floor price again
+          foundFloorForThisType = findFloor(thisType, lastSearchedIndex)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      const thisFloor = foundFloorForThisType.price ? foundFloorForThisType.price / 1000000 : null
+      console.log(`found floor for ${thisType}! floor is ${thisFloor}`)
+
+      try {
+        // save floor data to local database
+        const floorData = JSON.parse(fs.readFileSync('./floor-data.json', 'utf8'))
+        floorData[thisType].push({ floor: thisFloor, timestamp: Date.now() })
+        fs.writeFileSync('./floor-data.json', JSON.stringify(floorData), 'utf8')
       } catch (error) {
         console.error(error)
       }
     }
 
-    const thisFloor = foundFloorForThisType.price ? foundFloorForThisType.price / 1000000 : null
-    console.log(`found floor for ${thisType}! floor is ${thisFloor}`)
+    // manage git push
+    exec(
+      'cd .. && git add data/floor-data.json && git commit -m "🤖 BOT: updated database" && git push',
+      (gitPushError, gitPushStderr, gitPushStdout) => {
+        if (gitPushError) return console.log(`child_process error: ${JSON.stringify(gitPushError)}`)
+        if (gitPushStderr) return console.log(`child_process stderr: ${JSON.stringify(gitPushStderr)}`)
+        console.log(`child_process stdout: ${JSON.stringify(gitPushStdout)}`)
 
-    try {
-      // save floor data to local database
-      const floorData = JSON.parse(fs.readFileSync('./floor-data.json', 'utf8'))
-      floorData[thisType].push({ floor: thisFloor, timestamp: Date.now() })
-      fs.writeFileSync('./floor-data.json', JSON.stringify(floorData), 'utf8')
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  // manage git push
-  const gitPush = exec('cd .. && git add data/floor-data.json && git commit -m "🤖 BOT: updated database" && git push')
-  if (gitPush.error) return console.log(`child_process error: ${gitPush.error.message}`)
-  if (gitPush.stderr) return console.log(`child_process stderr: ${gitPush.stderr}`)
-  console.log(`child_process stdout: ${gitPush.stdout}`)
-
-  console.log('cron job finished')
+        console.log('cron job finished')
+      },
+    )
+  })
 }
 
-cron.schedule('* 0 * * *', runCronJob, {
+cron.schedule('*/5 * * * *', runCronJob, {
   scheduled: true,
   timezone: 'Asia/Jerusalem',
 })
