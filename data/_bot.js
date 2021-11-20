@@ -31,7 +31,7 @@ function runCronJob() {
   console.log('running cron job')
 
   // manage git pull
-  exec('cd .. && git fetch && git pull --no-rebase', async (gitPullError, gitPullStderr, gitPullStdout) => {
+  exec('cd .. && git fetch && git pull --no-rebase', async (gitPullError, gitPullStdout, gitPullStderr) => {
     if (gitPullError) return console.log(`child_process error: ${JSON.stringify(gitPullError)}`)
     if (gitPullStderr) return console.log(`child_process stderr: ${JSON.stringify(gitPullStderr)}`)
     console.log(`child_process stdout: ${JSON.stringify(gitPullStdout)}`)
@@ -111,7 +111,7 @@ function runCronJob() {
     // manage git push
     exec(
       'cd .. && git add data/floor-data.json && git commit -m "🤖 BOT: updated database" && git push',
-      (gitPushError, gitPushStderr, gitPushStdout) => {
+      (gitPushError, gitPushStdout, gitPushStderr) => {
         if (gitPushError) return console.log(`child_process error: ${JSON.stringify(gitPushError)}`)
         if (gitPushStderr) return console.log(`child_process stderr: ${JSON.stringify(gitPushStderr)}`)
         console.log(`child_process stdout: ${JSON.stringify(gitPushStdout)}`)
