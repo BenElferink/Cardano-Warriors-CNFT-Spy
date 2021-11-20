@@ -1,37 +1,11 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { styled } from '@mui/material/styles'
-import { tooltipClasses } from '@mui/material/Tooltip'
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  CircularProgress,
-  Tooltip,
-  Typography,
-  useMediaQuery,
-} from '@mui/material'
+import { Card, CardActionArea, CardContent, CardMedia, Typography, useMediaQuery } from '@mui/material'
 import { Favorite as FavoriteIcon, Visibility as VisibilityIcon } from '@mui/icons-material'
+import Loading from './Loading'
+import HtmlTooltip from './HtmlTooltip'
 import ADA_SYMBOL from '../constants/ADA_SYMBOL'
 import crawlCNFT from '../functions/cnft'
-
-const Loading = () => (
-  <div style={{ width: '100%', display: 'grid', placeItems: 'center' }}>
-    <CircularProgress color='secondary' />
-  </div>
-)
-
-const HtmlTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
-  ({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: '#f5f5f9',
-      color: 'rgba(0, 0, 0, 0.87)',
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      border: '1px solid #dadde9',
-    },
-  }),
-)
+import styles from '../styles/Listings.module.css'
 
 function Listings({ title, options }) {
   const [data, setData] = useState([])
@@ -97,7 +71,7 @@ function Listings({ title, options }) {
   }
 
   return (
-    <div className='listings-container'>
+    <div className={styles.listingsContainer}>
       <Typography
         variant='h4'
         component='div'
@@ -110,7 +84,8 @@ function Listings({ title, options }) {
         }}>
         {title}
       </Typography>
-      <div className='list' onScroll={handleScroll}>
+
+      <div className={styles.list} onScroll={handleScroll}>
         {data.length ? data.map((listing) => <ListItem key={listing._id} listing={listing} />) : <Loading />}
         {isLoadingMore && <Loading />}
       </div>
@@ -163,11 +138,11 @@ function ListItem({ listing }) {
               <span style={{ fontSize: '0.7rem' }}>Listed: {new Date(listing.createdAt).toLocaleString()}</span>
               <br />
               <br />
-              <span className='icon-wrapper'>
-                <span className='icon-item'>
+              <span className={styles.iconsWrapper}>
+                <span className={styles.iconItem}>
                   <VisibilityIcon fontSize='small' /> {listing.views.length}
                 </span>
-                <span className='icon-item'>
+                <span className={styles.iconItem}>
                   <FavoriteIcon fontSize='small' /> {listing.favouriteCount}
                 </span>
               </span>
