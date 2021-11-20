@@ -1,0 +1,140 @@
+{
+  "rarities": {
+    "0": "common",
+    "1": "uncommon",
+    "2": "rare",
+    "3": "epic",
+    "4": "legendary",
+    "5": "mythical"
+  },
+  "warriors": [
+    {
+      "type": "assassin",
+      "rarity_level": 4
+    },
+    {
+      "type": "balrog",
+      "rarity_level": 5
+    },
+    {
+      "type": "barbarian",
+      "rarity_level": 1
+    },
+    {
+      "type": "cleric",
+      "rarity_level": 1
+    },
+    {
+      "type": "cook",
+      "rarity_level": 0
+    },
+    {
+      "type": "cyclop",
+      "rarity_level": 3
+    },
+    {
+      "type": "dark elf",
+      "rarity_level": 2
+    },
+    {
+      "type": "dark knight",
+      "rarity_level": 3
+    },
+    {
+      "type": "demon",
+      "rarity_level": 2
+    },
+    {
+      "type": "dragon",
+      "rarity_level": 5
+    },
+    {
+      "type": "dwarf",
+      "rarity_level": 1
+    },
+    {
+      "type": "elf",
+      "rarity_level": 2
+    },
+    {
+      "type": "ent",
+      "rarity_level": 5
+    },
+    {
+      "type": "guardian",
+      "rarity_level": 0
+    },
+    {
+      "type": "hobbit",
+      "rarity_level": 1
+    },
+    {
+      "type": "king",
+      "rarity_level": 4
+    },
+    {
+      "type": "knight",
+      "rarity_level": 0
+    },
+    {
+      "type": "lizard",
+      "rarity_level": 1
+    },
+    {
+      "type": "mage",
+      "rarity_level": 3
+    },
+    {
+      "type": "manticore",
+      "rarity_level": 5
+    },
+    {
+      "type": "minotaur",
+      "rarity_level": 4
+    },
+    {
+      "type": "mummy",
+      "rarity_level": 2
+    },
+    {
+      "type": "ninja",
+      "rarity_level": 3
+    },
+    {
+      "type": "orc",
+      "rarity_level": 1
+    },
+    {
+      "type": "skeleton",
+      "rarity_level": 1
+    },
+    {
+      "type": "thief",
+      "rarity_level": 4
+    },
+    {
+      "type": "vampire",
+      "rarity_level": 2
+    },
+    {
+      "type": "villager",
+      "rarity_level": 0
+    },
+    {
+      "type": "warrior",
+      "rarity_level": 0
+    },
+    {
+      "type": "werewolf",
+      "rarity_level": 3
+    },
+    {
+      "type": "wraith",
+      "rarity_level": 5
+    },
+    {
+      "type": "zombie",
+      "rarity_level": 0
+    }
+  ]
+}

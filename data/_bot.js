@@ -1,0 +1,112 @@
+const cron = require('node-cron')
+const Axios = require('axios')
+const fs = require('fs')
+const warriorsData = require('./warriors.json')
+
+const ENDPOINT = 'https://api.cnft.io/market/listings'
+
+const crawlCNFT = (options = {}) => {
+  const payload = {
+    project: options.project ?? 'Cardano Warriors',
+    types: options.types ?? ['listing', 'offer'],
+    search: options.search ?? undefined,
+    sort: options.sort ?? undefined,
+    page: options.page ?? 1,
+    priceMin: options.priceMin ?? 0,
+    priceMax: options.priceMax ?? undefined,
+    verified: options.verified ?? true,
+    nsfw: options.nsfw ?? false,
+    sold: options.sold ?? false,
+  }
+
+  return new Promise((resolve, reject) => {
+    Axios.post(ENDPOINT, payload, { headers: { 'Content-Type': 'application/json' } })
+      .then((response) => resolve(response.data.results))
+      .catch((error) => reject(error))
+  })
+}
+
+async function runCronJob() {
+  console.log('running cron job')
+
+  let page = 0
+  let lastSearchedIndex = 0
+  const preFetchedData = []
+
+  const findFloor = (warriorType = '', index = 0) => {
+    console.log(`searching floor for type ${warriorType} from index ${index}`)
+
+    // search pre-fetched data for floor price of this warrior type
+    // (reminder: data is fetched by sorted price, 1st item found is the floor)
+    for (let i = index; i < preFetchedData.length; i++) {
+      const preFetchedWarrior = preFetchedData[i]
+      if (warriorType === preFetchedWarrior.asset.metadata.type.toLowerCase()) {
+        return preFetchedWarrior
+      }
+    }
+
+    lastSearchedIndex = preFetchedData.length - 1
+    return null
+  }
+
+  // go through every warrior in the list
+  for (const warrior of warriorsData.warriors) {
+    lastSearchedIndex = 0
+    const thisType = warrior.type
+    let foundFloorForThisType = preFetchedData.length ? findFloor(thisType, lastSearchedIndex) : null
+
+    while (!foundFloorForThisType) {
+      try {
+        // as long as the floor is not found, get more data from cnft
+        page++
+        console.log(`crawling cnft for type ${thisType} at page ${page}`)
+        const fetchedData = await crawlCNFT({ sort: { price: 1 }, page })
+
+        // in case none are listed
+        if (!fetchedData.length && !foundFloorForThisType) {
+          foundFloorForThisType = { price: null }
+          break
+        }
+
+        if (preFetchedData.length) {
+          // a verification method to add only new data to the end of the array
+          const newWarriors = []
+          for (let i = fetchedData.length - 1; i >= 0; i--) {
+            if (fetchedData[i]._id === preFetchedData[preFetchedData.length - 1]._id) break
+            newWarriors.unshift(fetchedData[i])
+          }
+
+          newWarriors.forEach((item) => preFetchedData.push(item))
+        } else {
+          fetchedData.forEach((item) => preFetchedData.push(item))
+        }
+
+        // after each time new data was recieved, search for the floor price again
+        foundFloorForThisType = findFloor(thisType, lastSearchedIndex)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    const thisFloor = foundFloorForThisType.price ? foundFloorForThisType.price / 1000000 : null
+    console.log(`found floor for ${thisType}! floor is ${thisFloor}`)
+
+    try {
+      // save floor data to local database
+      const floorData = JSON.parse(fs.readFileSync('./floor-data.json', 'utf8'))
+      floorData[thisType].push({ floor: thisFloor, timestamp: Date.now() })
+      fs.writeFileSync('./floor-data.json', JSON.stringify(floorData), 'utf8')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  // TODO: manage git
+
+  console.log('cron job finished')
+}
+
+cron.schedule('* 0 * * *', runCronJob, {
+  scheduled: true,
+  timezone: 'Asia/Jerusalem',
+})
