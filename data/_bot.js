@@ -115,7 +115,7 @@ function runCronJob() {
   })
 }
 
-cron.schedule('* 12 * * *', runCronJob, {
+cron.schedule('0 0 * * *', runCronJob, {
   scheduled: true,
   timezone: 'Asia/Jerusalem',
 })
