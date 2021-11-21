@@ -97,8 +97,8 @@ function runCronJob() {
       try {
         // save floor data to local database
         const floorData = JSON.parse(fs.readFileSync('./floor-data.json', 'utf8'))
-        floorData[thisType].unshift({ floor: thisFloor, timestamp: Date.now() })
-        while (floorData[thisType].length > 30) floorData[thisType].pop()
+        floorData[thisType].push({ floor: thisFloor, timestamp: Date.now() })
+        while (floorData[thisType].length > 30) floorData[thisType].shift()
         fs.writeFileSync('./floor-data.json', JSON.stringify(floorData), 'utf8')
       } catch (error) {
         console.error(error)
