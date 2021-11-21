@@ -97,7 +97,8 @@ function runCronJob() {
       try {
         // save floor data to local database
         const floorData = JSON.parse(fs.readFileSync('./floor-data.json', 'utf8'))
-        floorData[thisType].push({ floor: thisFloor, timestamp: Date.now() })
+        floorData[thisType].unshift({ floor: thisFloor, timestamp: Date.now() })
+        while (floorData[thisType].length > 30) floorData[thisType].pop()
         fs.writeFileSync('./floor-data.json', JSON.stringify(floorData), 'utf8')
       } catch (error) {
         console.error(error)
@@ -114,7 +115,7 @@ function runCronJob() {
   })
 }
 
-cron.schedule('* 0 * * *', runCronJob, {
+cron.schedule('* 12 * * *', runCronJob, {
   scheduled: true,
   timezone: 'Asia/Jerusalem',
 })
