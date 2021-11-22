@@ -1,6 +1,5 @@
 import Axios from 'axios'
-
-const ENDPOINT = 'https://api.cnft.io/market/listings'
+import { CNFT_URL } from '../constants'
 
 const crawlCNFT = (options = {}) => {
   const payload = {
@@ -17,7 +16,7 @@ const crawlCNFT = (options = {}) => {
   }
 
   return new Promise((resolve, reject) => {
-    Axios.post(ENDPOINT, payload, { headers: { 'Content-Type': 'application/json' } })
+    Axios.post(CNFT_URL, payload, { headers: { 'Content-Type': 'application/json' } })
       .then((response) => resolve(response.data.results))
       .catch((error) => reject(error))
   })

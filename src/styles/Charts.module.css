@@ -1,0 +1,22 @@
+.container {
+  background-color: rgba(250, 250, 250, 0.4);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.toggle {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle span {
+  margin: 0 4px;
+}

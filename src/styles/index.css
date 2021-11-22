@@ -37,6 +37,14 @@ code {
   backdrop-filter: blur(11px);
 }
 
+.react-toggle .react-toggle-track {
+  background-color: #ab199f !important;
+}
+
+.react-toggle--checked .react-toggle-track {
+  background-color: #ab199f !important;
+}
+
 @media only screen and (min-width: 768px) {
   .App {
     flex-direction: row;
