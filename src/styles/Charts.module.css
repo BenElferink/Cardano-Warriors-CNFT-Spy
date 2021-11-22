@@ -1,11 +1,22 @@
 .container {
+  width: calc(95vw - 600px);
+  height: 70vh;
+  margin: auto auto 5vh auto;
+  padding: 1rem 2rem;
   background-color: rgba(250, 250, 250, 0.4);
+  border-radius: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .controls {
+  max-width: 420px;
+  width: 100%;
+  margin-bottom: auto;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .toggle {

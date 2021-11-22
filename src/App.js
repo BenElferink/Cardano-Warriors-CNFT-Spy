@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import Axios from 'axios'
+import { useMediaQuery } from '@mui/material'
 import Listings from './components/Listings'
-import { FLOOR_DATA_URL, WARRIOR_DATA_URL } from './constants'
 import FloorCharts from './components/FloorCharts'
+import { FLOOR_DATA_URL, WARRIOR_DATA_URL } from './constants'
 
 function App() {
   const [warriorsData, setWarrirosData] = useState(null)
   const [floorData, setFloorData] = useState(null)
+  const isDesktop = useMediaQuery('(min-width: 768px)')
 
   useEffect(() => {
     Axios.get(WARRIOR_DATA_URL)
@@ -18,12 +20,21 @@ function App() {
       .catch((error) => console.error(error))
   }, [])
 
+  if (isDesktop) {
+    return (
+      <div className='App'>
+        <Listings title='Recently Listed' options={{ sold: false }} />
+
+        {warriorsData && floorData && <FloorCharts warriorsData={warriorsData} floorData={floorData} />}
+
+        <Listings title='Recently Sold' options={{ sold: true }} />
+      </div>
+    )
+  }
+
   return (
     <div className='App'>
       <Listings title='Recently Listed' options={{ sold: false }} />
-
-      {warriorsData && floorData && <FloorCharts warriorsData={warriorsData} floorData={floorData} />}
-
       <Listings title='Recently Sold' options={{ sold: true }} />
     </div>
   )

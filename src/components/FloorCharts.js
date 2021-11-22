@@ -17,6 +17,8 @@ const COLORS = [
   'rgb(102, 0, 204)',
 ]
 
+const chartWidthSubstract = 750
+
 function FloorCharts({ warriorsData, floorData }) {
   const generateChartData = (warriorType, showMonth) => {
     const dates = floorData[warriorType].map((obj) =>
@@ -53,23 +55,26 @@ function FloorCharts({ warriorsData, floorData }) {
   const [selectedType, setSelectedType] = useState('mage')
   const [expandToMonth, setExpandToMonth] = useState(false)
   const [chartData, setChartData] = useState(generateChartData(selectedType, expandToMonth))
+  const [chartWidth, setChartWidth] = useState(window.innerWidth - chartWidthSubstract)
 
   useEffect(() => {
     setChartData(generateChartData(selectedType, expandToMonth))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType, expandToMonth])
 
+  useEffect(() => {
+    const handler = () => setChartWidth(window.innerWidth - chartWidthSubstract)
+    window.addEventListener('resize', handler)
+
+    return () => {
+      window.removeEventListener('resize', handler)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className={styles.container}>
       <div className={styles.controls}>
-        <Select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
-          {warriorsData.warriors.map((obj) => (
-            <MenuItem key={obj.type} value={obj.type}>
-              {obj.type} - {warriorsData.rarities[obj.rarity_level]}
-            </MenuItem>
-          ))}
-        </Select>
-
         <label className={styles.toggle}>
           <span>7d</span>
           <Toggle
@@ -79,9 +84,17 @@ function FloorCharts({ warriorsData, floorData }) {
           />
           <span>30d</span>
         </label>
+
+        <Select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+          {warriorsData.warriors.map((obj) => (
+            <MenuItem key={obj.type} value={obj.type}>
+              {obj.type} - {warriorsData.rarities[obj.rarity_level]}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
 
-      <Chart options={chartData.options} series={chartData.series} type='bar' width='500' />
+      <Chart options={chartData.options} series={chartData.series} type='bar' width={chartWidth} />
     </div>
   )
 }
