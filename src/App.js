@@ -8,7 +8,7 @@ import { FLOOR_DATA_URL, WARRIOR_DATA_URL } from './constants'
 function App() {
   const [warriorsData, setWarrirosData] = useState(null)
   const [floorData, setFloorData] = useState(null)
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   useEffect(() => {
     Axios.get(WARRIOR_DATA_URL)
