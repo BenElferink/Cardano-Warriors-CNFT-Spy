@@ -11,7 +11,7 @@ function Listings({ title, options }) {
   const [data, setData] = useState([])
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const pageRef = useRef(1)
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   useEffect(() => {
     // keep looking for new data every 10 seconds

@@ -1,7 +1,21 @@
-.container {
-  width: calc(95vw - 600px);
-  height: 70vh;
-  margin: auto auto 5vh auto;
+.root {
+  width: 95vw;
+  width: calc(100vw - 50px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  margin: 1rem 0 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartContainer {
+  width: 100%;
   padding: 1rem 2rem;
   background-color: rgba(250, 250, 250, 0.4);
   border-radius: 42px;
@@ -19,6 +33,10 @@
   justify-content: space-between;
 }
 
+.controls * {
+  font-size: 0.75rem;
+}
+
 .toggle {
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -30,4 +48,14 @@
 
 .toggle span {
   margin: 0 4px;
+}
+
+@media only screen and (min-width: 1024px) {
+  .root {
+    width: calc(95vw - 600px);
+  }
+
+  .controls * {
+    font-size: unset;
+  }
 }

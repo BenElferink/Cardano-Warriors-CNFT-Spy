@@ -4,6 +4,7 @@ import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
 import Chart from 'react-apexcharts'
 import styles from '../styles/Charts.module.css'
+import logo from '../assets/images/cw-logo.png'
 
 // https://www.npmjs.com/package/react-apexcharts
 // https://apexcharts.com/docs/react-charts/
@@ -17,9 +18,10 @@ const COLORS = [
   'rgb(102, 0, 204)',
 ]
 
-const chartWidthSubstract = 750
+const chartWidthSubstractDesktop = 750
+const chartWidthSubstractMobile = 100
 
-function FloorCharts({ warriorsData, floorData }) {
+function Charts({ warriorsData, floorData, isDesktop }) {
   const generateChartData = (warriorType, showMonth) => {
     const dates = floorData[warriorType].map((obj) =>
       new Date(obj.timestamp).toLocaleDateString().replace(`/${new Date().getFullYear()}`, ''),
@@ -55,7 +57,9 @@ function FloorCharts({ warriorsData, floorData }) {
   const [selectedType, setSelectedType] = useState('mage')
   const [expandToMonth, setExpandToMonth] = useState(false)
   const [chartData, setChartData] = useState(generateChartData(selectedType, expandToMonth))
-  const [chartWidth, setChartWidth] = useState(window.innerWidth - chartWidthSubstract)
+  const [chartWidth, setChartWidth] = useState(
+    window.innerWidth - (isDesktop ? chartWidthSubstractDesktop : chartWidthSubstractMobile),
+  )
 
   useEffect(() => {
     setChartData(generateChartData(selectedType, expandToMonth))
@@ -63,7 +67,8 @@ function FloorCharts({ warriorsData, floorData }) {
   }, [selectedType, expandToMonth])
 
   useEffect(() => {
-    const handler = () => setChartWidth(window.innerWidth - chartWidthSubstract)
+    const handler = () =>
+      setChartWidth(window.innerWidth - (isDesktop ? chartWidthSubstractDesktop : chartWidthSubstractMobile))
     window.addEventListener('resize', handler)
 
     return () => {
@@ -73,30 +78,36 @@ function FloorCharts({ warriorsData, floorData }) {
   }, [])
 
   return (
-    <div className={styles.container}>
-      <div className={styles.controls}>
-        <label className={styles.toggle}>
-          <span>7d</span>
-          <Toggle
-            icons={false}
-            defaultChecked={expandToMonth}
-            onChange={() => setExpandToMonth((prev) => !prev)}
-          />
-          <span>30d</span>
-        </label>
+    <div className={styles.root}>
+      <header className={styles.header}>
+        <img src={logo} alt='logo' />
+      </header>
 
-        <Select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
-          {warriorsData.warriors.map((obj) => (
-            <MenuItem key={obj.type} value={obj.type}>
-              {obj.type} - {warriorsData.rarities[obj.rarity_level]}
-            </MenuItem>
-          ))}
-        </Select>
-      </div>
+      <section className={styles.chartContainer}>
+        <div className={styles.controls}>
+          <label className={styles.toggle}>
+            <span>7d</span>
+            <Toggle
+              icons={false}
+              defaultChecked={expandToMonth}
+              onChange={() => setExpandToMonth((prev) => !prev)}
+            />
+            <span>30d</span>
+          </label>
 
-      <Chart options={chartData.options} series={chartData.series} type='bar' width={chartWidth} />
+          <Select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+            {warriorsData.warriors.map((obj) => (
+              <MenuItem key={obj.type} value={obj.type}>
+                {obj.type} - {warriorsData.rarities[obj.rarity_level]}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+
+        <Chart options={chartData.options} series={chartData.series} type='bar' width={chartWidth} />
+      </section>
     </div>
   )
 }
 
-export default FloorCharts
+export default Charts

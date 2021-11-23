@@ -45,7 +45,7 @@ code {
   background-color: #ab199f !important;
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 1024px) {
   .App {
     flex-direction: row;
   }
