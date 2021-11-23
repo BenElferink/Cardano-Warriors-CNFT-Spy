@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/cardano-warriors-cnft-spy/static/css/main.f1c9cb7a.chunk.css",
-    "main.js": "/cardano-warriors-cnft-spy/static/js/main.5473cfb5.chunk.js",
-    "main.js.map": "/cardano-warriors-cnft-spy/static/js/main.5473cfb5.chunk.js.map",
+    "main.js": "/cardano-warriors-cnft-spy/static/js/main.16e66081.chunk.js",
+    "main.js.map": "/cardano-warriors-cnft-spy/static/js/main.16e66081.chunk.js.map",
     "runtime-main.js": "/cardano-warriors-cnft-spy/static/js/runtime-main.8d24b275.js",
     "runtime-main.js.map": "/cardano-warriors-cnft-spy/static/js/runtime-main.8d24b275.js.map",
     "static/css/2.65aefc5a.chunk.css": "/cardano-warriors-cnft-spy/static/css/2.65aefc5a.chunk.css",
-    "static/js/2.8d6558a8.chunk.js": "/cardano-warriors-cnft-spy/static/js/2.8d6558a8.chunk.js",
-    "static/js/2.8d6558a8.chunk.js.map": "/cardano-warriors-cnft-spy/static/js/2.8d6558a8.chunk.js.map",
+    "static/js/2.f979e94f.chunk.js": "/cardano-warriors-cnft-spy/static/js/2.f979e94f.chunk.js",
+    "static/js/2.f979e94f.chunk.js.map": "/cardano-warriors-cnft-spy/static/js/2.f979e94f.chunk.js.map",
     "index.html": "/cardano-warriors-cnft-spy/index.html",
     "static/css/2.65aefc5a.chunk.css.map": "/cardano-warriors-cnft-spy/static/css/2.65aefc5a.chunk.css.map",
     "static/css/main.f1c9cb7a.chunk.css.map": "/cardano-warriors-cnft-spy/static/css/main.f1c9cb7a.chunk.css.map",
-    "static/js/2.8d6558a8.chunk.js.LICENSE.txt": "/cardano-warriors-cnft-spy/static/js/2.8d6558a8.chunk.js.LICENSE.txt",
+    "static/js/2.f979e94f.chunk.js.LICENSE.txt": "/cardano-warriors-cnft-spy/static/js/2.f979e94f.chunk.js.LICENSE.txt",
     "static/media/index.css": "/cardano-warriors-cnft-spy/static/media/cw-bg.2d72a146.png"
   },
   "entrypoints": [
     "static/js/runtime-main.8d24b275.js",
     "static/css/2.65aefc5a.chunk.css",
-    "static/js/2.8d6558a8.chunk.js",
+    "static/js/2.f979e94f.chunk.js",
     "static/css/main.f1c9cb7a.chunk.css",
-    "static/js/main.5473cfb5.chunk.js"
+    "static/js/main.16e66081.chunk.js"
   ]
 }
