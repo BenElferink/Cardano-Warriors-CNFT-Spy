@@ -1,5 +1,6 @@
-import { MenuItem, Select } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import useLocalStorage from '../hooks/useLocalStorage'
+import { MenuItem, Select } from '@mui/material'
 import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
 import Chart from 'react-apexcharts'
@@ -46,12 +47,13 @@ function Charts({ warriorsData, floorData, isDesktop }) {
     }
   }
 
-  const [selectedType, setSelectedType] = useState('mage')
-  const [expandToMonth, setExpandToMonth] = useState(false)
+  const generateChartWidth = () =>
+    window.innerWidth - (isDesktop ? chartWidthSubstractDesktop : chartWidthSubstractMobile)
+
+  const [selectedType, setSelectedType] = useLocalStorage('selectedType', 'mage')
+  const [expandToMonth, setExpandToMonth] = useLocalStorage('expandToMonth', false)
   const [chartData, setChartData] = useState(generateChartData(selectedType, expandToMonth))
-  const [chartWidth, setChartWidth] = useState(
-    window.innerWidth - (isDesktop ? chartWidthSubstractDesktop : chartWidthSubstractMobile),
-  )
+  const [chartWidth, setChartWidth] = useState(generateChartWidth())
 
   useEffect(() => {
     setChartData(generateChartData(selectedType, expandToMonth))
@@ -59,8 +61,7 @@ function Charts({ warriorsData, floorData, isDesktop }) {
   }, [selectedType, expandToMonth])
 
   useEffect(() => {
-    const handler = () =>
-      setChartWidth(window.innerWidth - (isDesktop ? chartWidthSubstractDesktop : chartWidthSubstractMobile))
+    const handler = () => setChartWidth(generateChartWidth())
     window.addEventListener('resize', handler)
 
     return () => {
