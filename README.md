@@ -4,7 +4,7 @@ This application is a free-to-use community tool for Cardano Warriors.<br />
 It is capable of following features:
 
 1. See recently listed and recently sold Warriors on CNFT.io, can be useful for "sniping".
-2. <strike>Track "floor" prices for each Warrior type through visualized data charts. Toggle between 7 days, and 30 days charts.</strike>
+2. Track "floor" prices for each Warrior type through visualized data charts. Toggle between 7 days, and 30 days charts.
 3. <strike>Create a portfolio where you can track gain/loss on your Warrior, compared to floor prices.</strike>
 
 ## Folder structure
