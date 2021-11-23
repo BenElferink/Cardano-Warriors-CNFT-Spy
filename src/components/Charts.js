@@ -7,7 +7,7 @@ import styles from '../styles/Charts.module.css'
 import logo from '../assets/images/cw-logo.png'
 
 const chartWidthSubstractDesktop = 750
-const chartWidthSubstractMobile = 100
+const chartWidthSubstractMobile = 70
 
 function Charts({ warriorsData, floorData, isDesktop }) {
   const generateChartData = (warriorType, showMonth) => {
