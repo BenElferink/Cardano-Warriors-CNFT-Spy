@@ -6,26 +6,18 @@ import Chart from 'react-apexcharts'
 import styles from '../styles/Charts.module.css'
 import logo from '../assets/images/cw-logo.png'
 
-// https://www.npmjs.com/package/react-apexcharts
-// https://apexcharts.com/docs/react-charts/
-
-const COLORS = [
-  'rgb(102, 178, 255)',
-  'rgb(60, 179, 113)',
-  'rgb(0, 0, 0)',
-  'rgb(245, 69, 3)',
-  'rgb(102, 0, 204)',
-  'rgb(102, 0, 204)',
-]
-
 const chartWidthSubstractDesktop = 750
 const chartWidthSubstractMobile = 100
 
 function Charts({ warriorsData, floorData, isDesktop }) {
   const generateChartData = (warriorType, showMonth) => {
-    const dates = floorData[warriorType].map((obj) =>
-      new Date(obj.timestamp).toLocaleDateString().replace(`/${new Date().getFullYear()}`, ''),
-    )
+    const dates = floorData[warriorType].map((obj) => {
+      const timestamp = new Date(obj.timestamp)
+      const month = timestamp.getMonth()
+      const day = timestamp.getDate()
+
+      return `${month + 1}/${day}`
+    })
     const prices = floorData[warriorType].map((obj) => obj.floor)
 
     if (showMonth) {
