@@ -7,13 +7,6 @@
   align-items: center;
 }
 
-.header {
-  margin: 1rem 0 2rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .chartContainer {
   width: 100%;
   padding: 1rem 2rem;
@@ -53,6 +46,14 @@
 @media only screen and (min-width: 1024px) {
   .root {
     width: calc(95vw - 600px);
+    max-height: 100vh;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .root::-webkit-scrollbar {
+    display: none;
   }
 
   .controls * {

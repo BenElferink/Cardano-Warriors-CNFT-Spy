@@ -39,9 +39,12 @@
 }
 
 @media only screen and (min-width: 1024px) {
+  .listingsContainer {
+    height: 100vh;
+  }
+
   .list {
     width: 300px;
-    height: calc(100vh - 80px);
     flex-direction: column;
   }
 }

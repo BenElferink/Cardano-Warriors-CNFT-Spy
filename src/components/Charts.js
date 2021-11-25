@@ -4,8 +4,9 @@ import { MenuItem, Select } from '@mui/material'
 import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
 import Chart from 'react-apexcharts'
+import Header from './Header'
+import Footer from './Footer'
 import styles from '../styles/Charts.module.css'
-import logo from '../assets/images/cw-logo.png'
 
 const chartWidthSubstractDesktop = 750
 const chartWidthSubstractMobile = 70
@@ -72,9 +73,7 @@ function Charts({ warriorsData, floorData, isDesktop }) {
 
   return (
     <div className={styles.root}>
-      <header className={styles.header}>
-        <img src={logo} alt='logo' />
-      </header>
+      <Header />
 
       <section className={styles.chartContainer}>
         <div className={styles.controls}>
@@ -99,6 +98,8 @@ function Charts({ warriorsData, floorData, isDesktop }) {
 
         <Chart options={chartData.options} series={chartData.series} type='bar' width={chartWidth} />
       </section>
+
+      <Footer isDesktop={isDesktop} />
     </div>
   )
 }

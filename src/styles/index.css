@@ -37,6 +37,14 @@ code {
   backdrop-filter: blur(11px);
 }
 
+.flex-evenly {
+  width: 100%;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
 .react-toggle .react-toggle-track {
   background-color: #ab199f !important;
 }
