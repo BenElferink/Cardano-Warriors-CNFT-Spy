@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/cardano-warriors-cnft-spy/static/css/main.7275a068.chunk.css",
-    "main.js": "/cardano-warriors-cnft-spy/static/js/main.0506b497.chunk.js",
-    "main.js.map": "/cardano-warriors-cnft-spy/static/js/main.0506b497.chunk.js.map",
+    "main.js": "/cardano-warriors-cnft-spy/static/js/main.9f168718.chunk.js",
+    "main.js.map": "/cardano-warriors-cnft-spy/static/js/main.9f168718.chunk.js.map",
     "runtime-main.js": "/cardano-warriors-cnft-spy/static/js/runtime-main.8d24b275.js",
     "runtime-main.js.map": "/cardano-warriors-cnft-spy/static/js/runtime-main.8d24b275.js.map",
     "static/css/2.65aefc5a.chunk.css": "/cardano-warriors-cnft-spy/static/css/2.65aefc5a.chunk.css",
@@ -19,6 +19,6 @@
     "static/css/2.65aefc5a.chunk.css",
     "static/js/2.769764a0.chunk.js",
     "static/css/main.7275a068.chunk.css",
-    "static/js/main.0506b497.chunk.js"
+    "static/js/main.9f168718.chunk.js"
   ]
 }
