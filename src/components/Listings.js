@@ -7,11 +7,13 @@ import { ADA_SYMBOL } from '../constants'
 import crawlCNFT from '../functions/crawlCNFT'
 import styles from '../styles/Listings.module.css'
 
-function Listings({ title, options }) {
+function Listings({ title = 'Listings', options = {} }) {
   const [data, setData] = useState([])
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const pageRef = useRef(1)
   const isDesktop = useMediaQuery('(min-width: 1024px)')
+
+  console.log(data)
 
   useEffect(() => {
     // keep looking for new data every 10 seconds
@@ -86,14 +88,23 @@ function Listings({ title, options }) {
       </Typography>
 
       <div className={styles.list} onScroll={handleScroll}>
-        {data.length ? data.map((listing) => <ListItem key={listing._id} listing={listing} />) : <Loading />}
+        {data.length ? (
+          data.map((listing) => <ListItem key={listing._id} listing={listing} isSold={options.sold} />)
+        ) : (
+          <Loading />
+        )}
         {isLoadingMore && <Loading />}
       </div>
     </div>
   )
 }
 
-function ListItem({ listing }) {
+function ListItem({ listing, isSold }) {
+  const clickItem = () =>
+    isSold
+      ? window.open(`https://pool.pm/${listing.asset.unit}`, '_blank')
+      : window.open(`https://cnft.io/token/${listing._id}`, '_blank')
+
   return (
     <Card sx={{ margin: '1rem 2rem', borderRadius: '1rem', overflow: 'visible' }}>
       <HtmlTooltip
@@ -121,7 +132,7 @@ function ListItem({ listing }) {
             ))}
           </Fragment>
         }>
-        <CardActionArea onClick={() => window.open(`https://cnft.io/token/${listing._id}`, '_blank')}>
+        <CardActionArea onClick={clickItem}>
           <CardMedia
             component='img'
             image={`https://ipfs.io/ipfs/${listing.asset.metadata.image.replace('ipfs://', '')}`}
@@ -135,7 +146,9 @@ function ListItem({ listing }) {
             <Typography variant='body2' color='text.secondary'>
               {listing.asset.metadata.name}
               <br />
-              <span style={{ fontSize: '0.7rem' }}>Listed: {new Date(listing.createdAt).toLocaleString()}</span>
+              <span style={{ fontSize: '0.7rem' }}>
+                Listed: {new Date(listing.createdAt).toLocaleString()}
+              </span>
               <br />
               <br />
               <span className={styles.iconsWrapper}>
