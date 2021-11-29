@@ -1,5 +1,7 @@
 # Cardano Warriors CNFT Spy
 
+<img src='./docs/preview.png' />
+
 This application is a free-to-use community tool for Cardano Warriors.<br />
 It is capable of following features:
 
