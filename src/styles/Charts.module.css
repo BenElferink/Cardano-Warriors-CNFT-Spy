@@ -9,10 +9,11 @@
 }
 
 .controls {
-  max-width: 420px;
+  max-width: 500px;
   width: 100%;
   margin-bottom: auto;
   display: flex;
+  flex-direction: column-reverse;
   align-items: center;
   justify-content: space-between;
 }
@@ -22,7 +23,8 @@
 }
 
 .toggleWrap {
-  width: 240px;
+  width: 250px;
+  margin-top: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,7 +43,16 @@
     display: none;
   }
 
+  .controls {
+    flex-direction: row;
+  }
+
   .controls * {
     font-size: unset;
+  }
+
+  .toggleWrap {
+    width: 270px;
+    margin-top: unset;
   }
 }
