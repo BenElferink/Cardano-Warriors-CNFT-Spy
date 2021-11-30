@@ -12,6 +12,14 @@ function Charts({ warriorsData, floorData, isDesktop }) {
   const generateTypeChartData = (warriorType, showMonth) => {
     const prices = floorData[warriorType].map((obj) => obj.floor)
 
+    if (showMonth) {
+      while (prices.length < 30) prices.unshift(0)
+      while (prices.length > 30) prices.shift()
+    } else {
+      while (prices.length < 7) prices.unshift(0)
+      while (prices.length > 7) prices.shift()
+    }
+
     const dates = floorData[warriorType].map((obj) => {
       const timestamp = new Date(obj.timestamp)
       const month = timestamp.getMonth()
@@ -22,14 +30,10 @@ function Charts({ warriorsData, floorData, isDesktop }) {
 
     if (showMonth) {
       while (dates.length < 30) dates.unshift(0)
-      while (prices.length < 30) prices.unshift(0)
       while (dates.length > 30) dates.shift()
-      while (prices.length > 30) prices.shift()
     } else {
       while (dates.length < 7) dates.unshift(0)
-      while (prices.length < 7) prices.unshift(0)
       while (dates.length > 7) dates.shift()
-      while (prices.length > 7) prices.shift()
     }
 
     return {
