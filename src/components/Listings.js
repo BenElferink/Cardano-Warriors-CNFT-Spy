@@ -13,8 +13,6 @@ function Listings({ title = 'Listings', options = {} }) {
   const pageRef = useRef(1)
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
-  console.log(data)
-
   useEffect(() => {
     // keep looking for new data every 10 seconds
     const interval = setInterval(() => {

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { MenuItem, Select } from '@mui/material'
-import Toggle from 'react-toggle'
-import 'react-toggle/style.css'
 import Chart from 'react-apexcharts'
-import Header from './Header'
-import Footer from './Footer'
+import Toggle from './Toggle'
 import styles from '../styles/Charts.module.css'
 
 const chartWidthSubstractDesktop = 750
@@ -51,15 +48,17 @@ function Charts({ warriorsData, floorData, isDesktop }) {
   const generateChartWidth = () =>
     window.innerWidth - (isDesktop ? chartWidthSubstractDesktop : chartWidthSubstractMobile)
 
+  const [showThirtyDay, setShowThirtyDay] = useState(false)
+  const [showByRarity, setShowByRarity] = useState(false)
   const [selectedType, setSelectedType] = useLocalStorage('selectedType', 'mage')
-  const [expandToMonth, setExpandToMonth] = useLocalStorage('expandToMonth', false)
-  const [chartData, setChartData] = useState(generateChartData(selectedType, expandToMonth))
+  const [selectedRarity, setSelectedRarity] = useLocalStorage('selectedRarity', 'epic')
+  const [chartData, setChartData] = useState(generateChartData(selectedType, showThirtyDay))
   const [chartWidth, setChartWidth] = useState(generateChartWidth())
 
   useEffect(() => {
-    setChartData(generateChartData(selectedType, expandToMonth))
+    setChartData(generateChartData(selectedType, showThirtyDay))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedType, expandToMonth])
+  }, [selectedType, showThirtyDay])
 
   useEffect(() => {
     const handler = () => setChartWidth(generateChartWidth())
@@ -72,21 +71,38 @@ function Charts({ warriorsData, floorData, isDesktop }) {
   }, [])
 
   return (
-    <div className={styles.root}>
-      <Header />
+    <section className={styles.chartContainer}>
+      <div className={styles.controls}>
+        <div className={styles.toggleWrap}>
+          <Toggle
+            name='chart-days'
+            labelLeft='7d'
+            labelRight='30d'
+            state={{
+              value: showThirtyDay,
+              setValue: setShowThirtyDay,
+            }}
+          />
+          <Toggle
+            name='chart-type'
+            labelLeft='type'
+            labelRight='rarity'
+            state={{
+              value: showByRarity,
+              setValue: setShowByRarity,
+            }}
+          />
+        </div>
 
-      <section className={styles.chartContainer}>
-        <div className={styles.controls}>
-          <label className={styles.toggle}>
-            <span>7d</span>
-            <Toggle
-              icons={false}
-              defaultChecked={expandToMonth}
-              onChange={() => setExpandToMonth((prev) => !prev)}
-            />
-            <span>30d</span>
-          </label>
-
+        {showByRarity ? (
+          <Select value={selectedRarity} onChange={(e) => setSelectedRarity(e.target.value)}>
+            {Object.entries(warriorsData.rarities).map(([key, val]) => (
+              <MenuItem key={key} value={val}>
+                {val}
+              </MenuItem>
+            ))}
+          </Select>
+        ) : (
           <Select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
             {warriorsData.warriors.map((obj) => (
               <MenuItem key={obj.type} value={obj.type}>
@@ -94,13 +110,11 @@ function Charts({ warriorsData, floorData, isDesktop }) {
               </MenuItem>
             ))}
           </Select>
-        </div>
+        )}
+      </div>
 
-        <Chart options={chartData.options} series={chartData.series} type='bar' width={chartWidth} />
-      </section>
-
-      <Footer isDesktop={isDesktop} />
-    </div>
+      <Chart options={chartData.options} series={chartData.series} type='bar' width={chartWidth} />
+    </section>
   )
 }
 

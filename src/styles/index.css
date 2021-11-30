@@ -37,6 +37,15 @@ code {
   backdrop-filter: blur(11px);
 }
 
+.main {
+  width: 95vw;
+  width: calc(100vw - 50px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .flex-evenly {
   width: 100%;
   margin: 2rem 0;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Axios from 'axios'
 import { useMediaQuery } from '@mui/material'
 import Listings from './components/Listings'
-import Charts from './components/Charts'
+import Main from './components/Main'
 import { FLOOR_DATA_URL, WARRIOR_DATA_URL } from './constants'
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
     return (
       <div className='App'>
         <Listings title='Recently Listed' options={{ sold: false }} />
-        {warriorsData && floorData && <Charts warriorsData={warriorsData} floorData={floorData} isDesktop />}
+        {warriorsData && floorData && <Main warriorsData={warriorsData} floorData={floorData} isDesktop />}
         <Listings title='Recently Sold' options={{ sold: true }} />
       </div>
     )
@@ -32,7 +32,7 @@ function App() {
 
   return (
     <div className='App'>
-      {warriorsData && floorData && <Charts warriorsData={warriorsData} floorData={floorData} isDesktop={false} />}
+      {warriorsData && floorData && <Main warriorsData={warriorsData} floorData={floorData} isDesktop={false} />}
       <Listings title='Recently Listed' options={{ sold: false }} />
       <Listings title='Recently Sold' options={{ sold: true }} />
     </div>
