@@ -85,7 +85,7 @@ function Charts({ warriorsData, floorData, isDesktop }) {
       }
 
       return payload
-    })
+    }).sort((a, b) => a.data[0] - b.data[0])
 
     const dates = floorData[warriorList[0].type].map((obj) => {
       const timestamp = new Date(obj.timestamp)
