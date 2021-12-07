@@ -30,6 +30,13 @@ const crawlCNFT = (options = {}) => {
 function runCronJob() {
   console.log('running cron job')
 
+  const newDate = new Date()
+  newDate.setHours(0)
+  newDate.setMinutes(0)
+  newDate.setSeconds(0)
+  newDate.setMilliseconds(0)
+  const timestamp = newDate.getTime()
+
   // manage git pull
   exec('cd .. && git fetch && git pull --no-rebase', async (gitPullError, gitPullStdout, gitPullStderr) => {
     let page = 0
@@ -97,7 +104,7 @@ function runCronJob() {
       try {
         // save floor data to local database
         const floorData = JSON.parse(fs.readFileSync('./floor-data.json', 'utf8'))
-        floorData[thisType].push({ floor: thisFloor, timestamp: Date.now() })
+        floorData[thisType].push({ floor: thisFloor, timestamp })
         while (floorData[thisType].length > 30) floorData[thisType].shift()
         fs.writeFileSync('./floor-data.json', JSON.stringify(floorData), 'utf8')
       } catch (error) {
