@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import { CNFT_URL } from '../constants'
 
-const crawlCNFT = (options = {}) => {
+function crawlCNFT(options = {}) {
   const payload = {
     project: options.project ?? 'Cardano Warriors',
     types: options.types ?? ['listing', 'offer'],

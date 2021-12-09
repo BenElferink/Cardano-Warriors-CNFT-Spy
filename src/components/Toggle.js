@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react'
-import useLocalStorage from '../hooks/useLocalStorage'
+import { useLocalStorage } from '../hooks'
 import ReactToggle from 'react-toggle'
 import 'react-toggle/style.css'
 
-function Toggle({ name = 'default', labelLeft = 'off', labelRight = 'on', showIcons = false, state: { value, setValue } }) {
+function Toggle({
+  name = 'default',
+  labelLeft = 'off',
+  labelRight = 'on',
+  showIcons = false,
+  state: { value, setValue },
+  style = {},
+}) {
   const [toggle, setToggle] = useLocalStorage(`toggle-key-${name}`, value ?? false)
 
   const styles = {
@@ -12,6 +19,7 @@ function Toggle({ name = 'default', labelLeft = 'off', labelRight = 'on', showIc
       display: 'flex',
       alignItems: 'center',
       cursor: 'pointer',
+      ...style,
     },
     span: {
       margin: '0 4px',

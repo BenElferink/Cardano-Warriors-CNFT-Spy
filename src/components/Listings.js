@@ -1,11 +1,10 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { Card, CardActionArea, CardContent, CardMedia, Typography, useMediaQuery } from '@mui/material'
+import { Typography, useMediaQuery } from '@mui/material'
 import { Favorite as FavoriteIcon, Visibility as VisibilityIcon } from '@mui/icons-material'
 import Loading from './Loading'
-import HtmlTooltip from './HtmlTooltip'
-import { ADA_SYMBOL } from '../constants'
-import crawlCNFT from '../functions/crawlCNFT'
+import { crawlCNFT, getImageFromIPFS } from '../functions'
 import styles from '../styles/Listings.module.css'
+import ListItem from './ListItem'
 
 function Listings({ title = 'Listings', options = {} }) {
   const [data, setData] = useState([])
@@ -56,7 +55,7 @@ function Listings({ title = 'Listings', options = {} }) {
             const newWarriors = []
             for (let i = warriors.length - 1; i >= 0; i--) {
               const currentWarrior = warriors[i]
-              if (currentWarrior._id === prev[prev.length - 1]._id) break
+              if (currentWarrior._id === prev[prev.length - 1]?._id) break
               newWarriors.unshift(currentWarrior)
             }
             return [...prev, ...newWarriors]
@@ -85,83 +84,61 @@ function Listings({ title = 'Listings', options = {} }) {
         {title}
       </Typography>
 
-      <div className={styles.list} onScroll={handleScroll}>
+      <div className={`scroll ${styles.list}`} onScroll={handleScroll}>
         {data.length ? (
-          data.map((listing) => <ListItem key={listing._id} listing={listing} isSold={options.sold} />)
+          data.map((listing) => (
+            <ListItem
+              key={`${title}-${listing._id}`}
+              name={listing.asset.metadata.name}
+              price={listing.price / 1000000}
+              imageSrc={getImageFromIPFS(listing.asset.metadata.image)}
+              itemUrl={
+                options.sold
+                  ? `https://pool.pm/${listing.asset.unit}`
+                  : `https://cnft.io/token/${listing._id}`
+              }
+              spanArray={[`Listed: ${new Date(listing.createdAt).toLocaleString()}`]}
+              iconArray={[
+                {
+                  icon: VisibilityIcon,
+                  txt: listing.views.length,
+                },
+                {
+                  icon: FavoriteIcon,
+                  txt: listing.favouriteCount,
+                },
+              ]}
+              htmlToolTipContent={
+                <Fragment>
+                  <Typography variant='body2'>
+                    {listing.asset.metadata.type} - {listing.asset.metadata.rarity}
+                  </Typography>
+                  <br />
+                  {listing.asset.metadata.traits.map((trait) => (
+                    <Fragment key={`${title}-${listing._id}-${trait}`}>
+                      <Typography variant='body3'>{trait}</Typography>
+                      <br />
+                    </Fragment>
+                  ))}
+                  <br />
+                  {listing.asset.metadata.items.map((item) => (
+                    <Fragment key={`${title}-${listing._id}-${item.name}`}>
+                      <Typography variant='body3'>
+                        {item.name} - {item.rarity}
+                      </Typography>
+                      <br />
+                    </Fragment>
+                  ))}
+                </Fragment>
+              }
+            />
+          ))
         ) : (
           <Loading />
         )}
         {isLoadingMore && <Loading />}
       </div>
     </div>
-  )
-}
-
-function ListItem({ listing, isSold }) {
-  const clickItem = () =>
-    isSold
-      ? window.open(`https://pool.pm/${listing.asset.unit}`, '_blank')
-      : window.open(`https://cnft.io/token/${listing._id}`, '_blank')
-
-  return (
-    <Card sx={{ margin: '1rem 2rem', borderRadius: '1rem', overflow: 'visible' }}>
-      <HtmlTooltip
-        followCursor
-        title={
-          <Fragment>
-            <Typography variant='body2'>
-              {listing.asset.metadata.type} - {listing.asset.metadata.rarity}
-            </Typography>
-            <br />
-            {listing.asset.metadata.traits.map((trait) => (
-              <Fragment key={`${listing._id}-${trait}`}>
-                <Typography variant='body3'>{trait}</Typography>
-                <br />
-              </Fragment>
-            ))}
-            <br />
-            {listing.asset.metadata.items.map((item) => (
-              <Fragment key={`${listing._id}-${item.name}`}>
-                <Typography variant='body3'>
-                  {item.name} - {item.rarity}
-                </Typography>
-                <br />
-              </Fragment>
-            ))}
-          </Fragment>
-        }>
-        <CardActionArea onClick={clickItem}>
-          <CardMedia
-            component='img'
-            image={`https://ipfs.io/ipfs/${listing.asset.metadata.image.replace('ipfs://', '')}`}
-            alt=''
-          />
-          <CardContent>
-            <Typography gutterBottom variant='h5'>
-              {ADA_SYMBOL}
-              {listing.price / 1000000}
-            </Typography>
-            <Typography variant='body2' color='text.secondary'>
-              {listing.asset.metadata.name}
-              <br />
-              <span style={{ fontSize: '0.7rem' }}>
-                Listed: {new Date(listing.createdAt).toLocaleString()}
-              </span>
-              <br />
-              <br />
-              <span className={styles.iconsWrapper}>
-                <span className={styles.iconItem}>
-                  <VisibilityIcon fontSize='small' /> {listing.views.length}
-                </span>
-                <span className={styles.iconItem}>
-                  <FavoriteIcon fontSize='small' /> {listing.favouriteCount}
-                </span>
-              </span>
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </HtmlTooltip>
-    </Card>
   )
 }
 

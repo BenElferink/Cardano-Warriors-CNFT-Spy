@@ -1,10 +1,134 @@
-import { useState } from 'react'
-import { Button, IconButton, Modal, Typography, useMediaQuery } from '@mui/material'
-import { Fingerprint, CloseRounded } from '@mui/icons-material'
+import { useEffect, useState } from 'react'
+import { Button, Drawer, IconButton, TextField, Typography, useMediaQuery } from '@mui/material'
+import {
+  Fingerprint,
+  AddCircle,
+  CloseRounded,
+  ArrowCircleUp,
+  ArrowCircleDown,
+  CircleOutlined,
+} from '@mui/icons-material'
+import Chart from 'react-apexcharts'
+import Modal from './Modal'
+import Toggle from './Toggle'
+import Loading from './Loading'
+import ListItem from './ListItem'
+import ChangeGreenRed from './ChangeGreenRed'
+import { useLocalStorage } from '../hooks'
+import {
+  formatNumber,
+  getAssetFromBlockfrost,
+  getImageFromIPFS,
+  getLineOptions,
+  getPortfolioSeries,
+} from '../functions'
+import { ADA_SYMBOL, POLICY_ID } from '../constants'
+import addImage from '../assets/images/add.png'
+import styles from '../styles/Charts.module.css'
 
-function Portfolio() {
+function Portfolio({ floorData }) {
   const isMobile = useMediaQuery('(max-width: 768px)')
-  const [open, setOpen] = useState(false)
+  const [assets, setAssets] = useLocalStorage('assets', [])
+
+  const [openModal, setOpenModal] = useState(false)
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [showThirtyDay, setShowThirtyDay] = useState(false)
+
+  const [adding, setAdding] = useState(false)
+  const [addWarriorId, setAddWarriorId] = useState('')
+  const [addWarriorIdError, setAddWarriorIdError] = useState(false)
+  const [addWarriorPrice, setAddWarriorPrice] = useState('')
+  const [addWarriorPriceError, setAddWarriorPriceError] = useState(false)
+
+  const addAsset = async () => {
+    setAdding(true)
+    let idValid = false
+    let priceValid = false
+    const addWarriorIdTrimmed = Number(addWarriorId.replace('#', ''))
+
+    if (addWarriorIdTrimmed >= 1 && addWarriorIdTrimmed <= 10000) idValid = true
+    if (addWarriorPrice) priceValid = true
+
+    if (!idValid || !priceValid) {
+      setAddWarriorIdError(!idValid)
+      setAddWarriorPriceError(!priceValid)
+      setAdding(false)
+      return
+    }
+
+    const assetData = await getAssetFromBlockfrost(addWarriorIdTrimmed)
+    if (!assetData) {
+      setAdding(false)
+      return
+    }
+
+    const {
+      onchain_metadata: { id, name, type, rarity, image },
+    } = assetData
+
+    const newDate = new Date()
+    newDate.setHours(0)
+    newDate.setMinutes(0)
+    newDate.setSeconds(0)
+    newDate.setMilliseconds(0)
+    newDate.setDate(newDate.getDate() - 1)
+    const timestamp = newDate.getTime()
+
+    const payload = {
+      id: Number(id),
+      name,
+      type: type.toLowerCase(),
+      rarity: rarity.toLowerCase(),
+      image: getImageFromIPFS(image),
+      payed: Number(addWarriorPrice),
+      timestamp,
+    }
+
+    setAssets((prev) => {
+      if (prev.some((obj) => obj.id === payload.id)) {
+        return prev.map((obj) => {
+          if (obj.id === payload.id) {
+            return { ...obj, payed: payload.payed }
+          }
+
+          return obj
+        })
+      }
+
+      return [...prev, payload].sort((a, b) => a.id - b.id)
+    })
+    setAdding(false)
+    setOpenDrawer(false)
+  }
+
+  const removeAsset = (id) => {
+    setAssets((prev) => prev.filter((obj) => obj.id !== id))
+  }
+
+  const totalPayed = (() => {
+    let totalPayed = 0
+    assets.forEach(({ payed }) => {
+      totalPayed += payed
+    })
+    return totalPayed
+  })()
+
+  const totalBalance = (() => {
+    let totalBalance = 0
+    assets.forEach(({ type }) => {
+      totalBalance += floorData[type][floorData[type].length - 1].floor
+    })
+    return totalBalance
+  })()
+
+  const generateChartWidth = (width = window.innerWidth) => width - (width < 768 ? 50 : 420)
+  const [chartWidth, setChartWidth] = useState(generateChartWidth())
+
+  useEffect(() => {
+    const handler = () => setChartWidth(generateChartWidth())
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, []) // eslint-disable-line
 
   return (
     <>
@@ -13,40 +137,233 @@ function Portfolio() {
         color='secondary'
         size={isMobile ? 'medium' : 'large'}
         startIcon={<Fingerprint />}
-        onClick={() => setOpen(true)}>
+        onClick={() => setOpenModal(true)}>
         Portfolio
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <div
-          style={{
-            maxWidth: isMobile ? '100vw' : '420px',
-            width: '100%',
-            padding: '1rem',
-            height: isMobile ? '100vh' : 'fit-content',
-            backgroundColor: 'var(--blue)',
-            borderRadius: isMobile ? '0' : '1rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}>
-          <IconButton
-            sx={{
-              margin: '7px',
-              position: 'absolute',
-              top: '0',
-              right: '0',
+      <Modal title='Portfolio' open={openModal} onClose={() => setOpenModal(false)}>
+        <div className='flex-row' style={{ width: '100%', padding: '1rem' }}>
+          <div
+            className='flex-col'
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: 'rgba(250, 250, 250, 0.4)',
+              borderRadius: '0.5rem',
+            }}>
+            <p style={{ marginBottom: '11px' }}>Total Payed</p>
+            <div className='flex-row'>
+              <span style={{ fontSize: '2rem' }}>
+                {ADA_SYMBOL}
+                {formatNumber(totalPayed)}
+              </span>
+            </div>
+          </div>
+          <div
+            className='flex-col'
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: 'rgba(250, 250, 250, 0.4)',
+              borderRadius: '0.5rem',
+            }}>
+            <p style={{ marginBottom: '11px' }}>Current Balance</p>
+            <div className='flex-row'>
+              <span style={{ fontSize: '2rem' }}>
+                {ADA_SYMBOL}
+                {formatNumber(totalBalance)}
+              </span>
+              <div className='flex-col' style={{ marginLeft: '0.5rem' }}>
+                <ChangeGreenRed
+                  value={((100 / totalBalance) * (totalBalance - totalPayed)).toFixed(0)}
+                  suffix='%'
+                  invert
+                  withCaret
+                />
+                <ChangeGreenRed
+                  value={formatNumber(totalBalance - totalPayed)}
+                  prefix={ADA_SYMBOL}
+                  scale='0.8'
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section className={styles.chartContainer}>
+          <div className='flex-row' style={{ width: '100%', justifyContent: 'space-evenly' }}>
+            <Toggle
+              name='chart-days'
+              labelLeft='7d'
+              labelRight='30d'
+              state={{
+                value: showThirtyDay,
+                setValue: setShowThirtyDay,
+              }}
+            />
+            <div style={{ width: '42%' }} />
+          </div>
+          <Chart
+            options={getLineOptions(floorData, showThirtyDay)}
+            series={getPortfolioSeries(floorData, assets, showThirtyDay)}
+            type='line'
+            width={chartWidth}
+          />
+        </section>
+
+        <div style={{ overflow: 'unset' }}>
+          <div
+            style={{
+              width: '90%',
+              height: '2px',
+              margin: '2rem auto 1rem auto',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              borderRadius: '11px',
             }}
-            onClick={() => setOpen(false)}>
-            <CloseRounded color='error' />
-          </IconButton>
-          <Typography variant='h5'>Coming Soon™️</Typography>
+          />
+          <Typography variant='h6' sx={{ textAlign: 'center' }}>
+            My Assets
+          </Typography>
+          <div
+            className='scroll'
+            style={{
+              width: isMobile ? 'calc(100vw - 2rem)' : 'calc(100vw - 22rem)',
+              height: 'fit-content',
+              display: 'flex',
+              alignItems: 'center',
+            }}>
+            {adding ? (
+              <Loading />
+            ) : (
+              <ListItem
+                style={{ margin: '1rem' }}
+                price='DD NEW'
+                name='Click to add new asset'
+                imageSrc={addImage}
+                imageStyle={{ padding: '1rem' }}
+                onClick={() => setOpenDrawer((prev) => !prev)}
+                iconArray={[
+                  {
+                    icon: AddCircle,
+                    txt: '',
+                  },
+                ]}
+              />
+            )}
+            {assets.map(({ id, name, type, rarity, image, payed, timestamp }) => {
+              const priceDiff = floorData[type][floorData[type].length - 1].floor - payed
+
+              return (
+                <div key={id} style={{ position: 'relative' }}>
+                  <IconButton
+                    onClick={() => removeAsset(id)}
+                    sx={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: '1' }}>
+                    <CloseRounded />
+                  </IconButton>
+                  <ListItem
+                    style={{ margin: '1rem' }}
+                    name={name}
+                    price={formatNumber(payed)}
+                    imageSrc={image}
+                    itemUrl={`https://pool.pm/${POLICY_ID}.CardanoWarrior${id}`}
+                    // spanArray={[`Listed: ${new Date(listing.createdAt).toLocaleString()}`]}
+                    iconArray={[
+                      {
+                        icon:
+                          priceDiff > 0 ? ArrowCircleUp : priceDiff < 0 ? ArrowCircleDown : CircleOutlined,
+                        txt: formatNumber(priceDiff),
+                      },
+                    ]}
+
+                  // toolTip={({ children }) => (
+                  //   <HtmlTooltip
+                  //     followCursor
+                  //     title={
+                  //       <Fragment>
+                  //         <Typography variant='body2'>
+                  //           {listing.asset.metadata.type} - {listing.asset.metadata.rarity}
+                  //         </Typography>
+                  //         <br />
+                  //         {listing.asset.metadata.traits.map((trait) => (
+                  //           <Fragment key={`${title}-${listing._id}-${trait}`}>
+                  //             <Typography variant='body3'>{trait}</Typography>
+                  //             <br />
+                  //           </Fragment>
+                  //         ))}
+                  //         <br />
+                  //         {listing.asset.metadata.items.map((item) => (
+                  //           <Fragment key={`${title}-${listing._id}-${item.name}`}>
+                  //             <Typography variant='body3'>
+                  //               {item.name} - {item.rarity}
+                  //             </Typography>
+                  //             <br />
+                  //           </Fragment>
+                  //         ))}
+                  //       </Fragment>
+                  //     }>
+                  //     {children}
+                  //   </HtmlTooltip>
+                  // )}
+                  />
+                </div>
+              )
+            })}
+          </div>
         </div>
       </Modal>
+
+      <Drawer
+        anchor='bottom'
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        sx={{ zIndex: '999999' }}>
+        <div
+          className='flex-col'
+          style={{
+            maxWidth: '550px',
+            width: '100%',
+            margin: '1rem auto',
+            padding: '0.5rem 1rem',
+            alignItems: 'unset',
+          }}>
+          <TextField
+            label='Warrior ID'
+            placeholder='#2682'
+            varient='outlined'
+            value={addWarriorId}
+            onChange={(e) => {
+              setAddWarriorId(e.target.value)
+              setAddWarriorIdError(false)
+            }}
+            error={addWarriorIdError}
+            sx={{ margin: '0.4rem 0' }}
+          />
+          <TextField
+            label='ADA Payed'
+            placeholder={`${ADA_SYMBOL}600`}
+            varient='outlined'
+            value={addWarriorPrice}
+            onChange={(e) => {
+              setAddWarriorPrice(e.target.value)
+              setAddWarriorPriceError(false)
+            }}
+            error={addWarriorPriceError}
+            sx={{ margin: '0.4rem 0' }}
+          />
+
+          {adding ? (
+            <Loading />
+          ) : (
+            <Button
+              variant='contained'
+              color='secondary'
+              size='large'
+              startIcon={<AddCircle />}
+              onClick={addAsset}
+              sx={{ margin: '0.4rem 0' }}>
+              Add
+            </Button>
+          )}
+        </div>
+      </Drawer>
     </>
   )
 }

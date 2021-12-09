@@ -1,10 +1,10 @@
 import Portfolio from './Portfolio'
 import Donate from './Donate'
 
-function Footer({isDesktop}) {
+function Footer({ floorData, isDesktop }) {
   return (
     <footer className='flex-evenly'>
-      <Portfolio isDesktop={isDesktop} />
+      {floorData && <Portfolio floorData={floorData} isDesktop={isDesktop} />}
       <Donate isDesktop={isDesktop} />
     </footer>
   )

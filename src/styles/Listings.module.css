@@ -9,20 +9,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  overflow: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  cursor: all-scroll;
-}
-
-.list::-webkit-scrollbar {
-  display: none;
-}
-
-.list img {
-  width: 200px !important;
-  height: 200px !important;
-  border-radius: 1rem 1rem 0 0 !important;
 }
 
 .iconsWrapper {

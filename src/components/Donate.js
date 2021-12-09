@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Button, Chip, IconButton, Modal, Typography, useMediaQuery } from '@mui/material'
-import { CreditCard, CloseRounded, ContentCopy } from '@mui/icons-material'
+import { Button, Chip, useMediaQuery } from '@mui/material'
+import { CreditCard, ContentCopy } from '@mui/icons-material'
+import Modal from './Modal'
 import qrCode from '../assets/images/YoroiQR.png'
 import { ADA_ADDRESS } from '../constants'
 
@@ -30,65 +31,36 @@ function Donate() {
         Donate
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal title='Donate (ADA address)' open={open} onClose={() => setOpen(false)}>
         <div
           style={{
-            maxWidth: isMobile ? '100vw' : '420px',
-            width: '100%',
-            padding: '1rem',
-            height: isMobile ? '100vh' : 'fit-content',
-            backgroundColor: 'var(--blue)',
-            borderRadius: isMobile ? '0' : '1rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            width: 'fit-content',
+            height: 'fit-content',
+            margin: '2rem 0',
+            padding: '11px',
+            borderRadius: '11px',
+            backgroundColor: 'whitesmoke',
           }}>
-          <IconButton
-            sx={{
-              margin: '7px',
-              position: 'absolute',
-              top: '0',
-              right: '0',
-            }}
-            onClick={() => setOpen(false)}>
-            <CloseRounded color='error' />
-          </IconButton>
-          <Typography variant='h5'>Donate (ADA address)</Typography>
-
-          <div
-            style={{
-              width: 'fit-content',
-              height: 'fit-content',
-              margin: '2rem 0',
-              padding: '11px',
-              borderRadius: '11px',
-              backgroundColor: 'whitesmoke',
-            }}>
-            <img src={qrCode} alt='' />
-          </div>
-
-          <Chip
-            sx={{
-              width: '200px',
-              backgroundColor: 'whitesmoke',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              '&:hover': {
-                backgroundColor: 'whitesmoke',
-              },
-            }}
-            label={isCopied ? 'Copied 👍' : ADA_ADDRESS}
-            onClick={copyAddress}
-            onDelete={copyAddress}
-            deleteIcon={<ContentCopy />}
-          />
+          <img src={qrCode} alt='' />
         </div>
+
+        <Chip
+          sx={{
+            width: '200px',
+            backgroundColor: 'whitesmoke',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            '&:hover': {
+              backgroundColor: 'whitesmoke',
+            },
+          }}
+          label={isCopied ? 'Copied 👍' : ADA_ADDRESS}
+          onClick={copyAddress}
+          onDelete={copyAddress}
+          deleteIcon={<ContentCopy />}
+        />
       </Modal>
     </>
   )

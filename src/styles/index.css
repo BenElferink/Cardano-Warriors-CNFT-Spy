@@ -37,6 +37,17 @@ code {
   backdrop-filter: blur(11px);
 }
 
+.scroll {
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  cursor: all-scroll;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .main {
   width: 95vw;
   width: calc(100vw - 50px);
@@ -44,6 +55,20 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .flex-evenly {

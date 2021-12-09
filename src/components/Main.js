@@ -8,7 +8,7 @@ function Main({ warriorsData, floorData, isDesktop }) {
     <main className='main'>
       <Header />
       <Charts warriorsData={warriorsData} floorData={floorData} isDesktop={isDesktop} />
-      <Footer isDesktop={isDesktop} />
+      <Footer floorData={floorData} isDesktop={isDesktop} />
     </main>
   )
 }
