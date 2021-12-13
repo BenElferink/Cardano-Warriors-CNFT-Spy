@@ -1,26 +1,20 @@
 name: Deploy GitHub Pages
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
-
     steps:
-    
     - name: Checkout
       uses: actions/checkout@v1
-
     - name: Build
-      run: |
+      run:
         npm install
         npm run build
       env:
         REACT_APP_BLOCKFROST_KEY: ${{ secrets.REACT_APP_BLOCKFROST_KEY }}
-
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
