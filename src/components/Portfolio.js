@@ -240,7 +240,7 @@ function Portfolio({ floorData }) {
               <Loading />
             ) : (
               <ListItem
-                htmlToolTipContent={<div>Add new asset</div>}
+                htmlToolTipContent={<div>add new asset</div>}
                 style={{ margin: '1rem', backgroundColor: OPACITY_WHITE }}
                 flipToSide={isMobile}
                 price='DD NEW'
@@ -274,7 +274,6 @@ function Portfolio({ floorData }) {
                     price={formatNumber(payed)}
                     imageSrc={image}
                     itemUrl={`https://pool.pm/${POLICY_ID}.CardanoWarrior${id}`}
-                    // spanArray={[`Listed: ${new Date(listing.createdAt).toLocaleString()}`]}
                     iconArray={[
                       {
                         icon:
@@ -282,36 +281,6 @@ function Portfolio({ floorData }) {
                         txt: formatNumber(priceDiff),
                       },
                     ]}
-
-                  // toolTip={({ children }) => (
-                  //   <HtmlTooltip
-                  //     followCursor
-                  //     title={
-                  //       <Fragment>
-                  //         <Typography variant='body2'>
-                  //           {listing.asset.metadata.type} - {listing.asset.metadata.rarity}
-                  //         </Typography>
-                  //         <br />
-                  //         {listing.asset.metadata.traits.map((trait) => (
-                  //           <Fragment key={`${title}-${listing._id}-${trait}`}>
-                  //             <Typography variant='body3'>{trait}</Typography>
-                  //             <br />
-                  //           </Fragment>
-                  //         ))}
-                  //         <br />
-                  //         {listing.asset.metadata.items.map((item) => (
-                  //           <Fragment key={`${title}-${listing._id}-${item.name}`}>
-                  //             <Typography variant='body3'>
-                  //               {item.name} - {item.rarity}
-                  //             </Typography>
-                  //             <br />
-                  //           </Fragment>
-                  //         ))}
-                  //       </Fragment>
-                  //     }>
-                  //     {children}
-                  //   </HtmlTooltip>
-                  // )}
                   />
                 </div>
               )
