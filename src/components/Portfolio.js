@@ -26,6 +26,8 @@ import { ADA_SYMBOL, POLICY_ID } from '../constants'
 import addImage from '../assets/images/add.png'
 import styles from '../styles/Charts.module.css'
 
+const OPACITY_WHITE = 'rgba(250, 250, 250, 0.4)'
+
 function Portfolio({ floorData }) {
   const isMobile = useMediaQuery('(max-width: 768px)')
   const [assets, setAssets] = useLocalStorage('assets', [])
@@ -121,7 +123,10 @@ function Portfolio({ floorData }) {
     return totalBalance
   })()
 
-  const generateChartWidth = (width = window.innerWidth) => width - (width < 768 ? 50 : 420)
+  const generateChartWidth = (width = window.innerWidth) => {
+    const x = width - (width < 768 ? 50 : 420)
+    return x > 750 ? 750 : x
+  }
   const [chartWidth, setChartWidth] = useState(generateChartWidth())
 
   useEffect(() => {
@@ -147,7 +152,7 @@ function Portfolio({ floorData }) {
             className='flex-col'
             style={{
               padding: '0.5rem 1rem',
-              backgroundColor: 'rgba(250, 250, 250, 0.4)',
+              backgroundColor: OPACITY_WHITE,
               borderRadius: '0.5rem',
             }}>
             <p style={{ marginBottom: '11px' }}>Total Payed</p>
@@ -162,7 +167,7 @@ function Portfolio({ floorData }) {
             className='flex-col'
             style={{
               padding: '0.5rem 1rem',
-              backgroundColor: 'rgba(250, 250, 250, 0.4)',
+              backgroundColor: OPACITY_WHITE,
               borderRadius: '0.5rem',
             }}>
             <p style={{ marginBottom: '11px' }}>Current Balance</p>
@@ -223,18 +228,21 @@ function Portfolio({ floorData }) {
             My Assets
           </Typography>
           <div
-            className='scroll'
             style={{
-              width: isMobile ? 'calc(100vw - 2rem)' : 'calc(100vw - 22rem)',
+              width: isMobile ? 'calc(100vw - 2rem)' : `${generateChartWidth(window.innerWidth) + 100}px`,
               height: 'fit-content',
               display: 'flex',
+              flexFlow: 'row wrap',
               alignItems: 'center',
+              justifyContent: 'flex-start',
             }}>
             {adding ? (
               <Loading />
             ) : (
               <ListItem
-                style={{ margin: '1rem' }}
+                htmlToolTipContent={<div>Add new asset</div>}
+                style={{ margin: '1rem', backgroundColor: OPACITY_WHITE }}
+                flipToSide={isMobile}
                 price='DD NEW'
                 name='Click to add new asset'
                 imageSrc={addImage}
@@ -248,7 +256,7 @@ function Portfolio({ floorData }) {
                 ]}
               />
             )}
-            {assets.map(({ id, name, type, rarity, image, payed, timestamp }) => {
+            {assets.map(({ id, name, type, rarity, image, payed }) => {
               const priceDiff = floorData[type][floorData[type].length - 1].floor - payed
 
               return (
@@ -259,7 +267,9 @@ function Portfolio({ floorData }) {
                     <CloseRounded />
                   </IconButton>
                   <ListItem
-                    style={{ margin: '1rem' }}
+                    htmlToolTipContent={<div>{type} - {rarity}</div>}
+                    style={{ margin: '1rem', backgroundColor: OPACITY_WHITE }}
+                    flipToSide={isMobile}
                     name={name}
                     price={formatNumber(payed)}
                     imageSrc={image}

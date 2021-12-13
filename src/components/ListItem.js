@@ -16,11 +16,14 @@ function ListItem({
   spanArray,
   iconArray,
   iconSize = 'small',
+  flipToSide = false,
 }) {
   return (
     <Card sx={{ margin: '1rem 2rem', borderRadius: '1rem', overflow: 'visible', ...style }}>
       <HtmlToolTip followCursor title={HtmlToolTipContent}>
-        <CardActionArea onClick={() => (onClick ? onClick() : window.open(itemUrl, '_blank'))}>
+        <CardActionArea
+          style={{ display: 'flex', flexDirection: flipToSide ? 'row-reverse' : 'column' }}
+          onClick={() => (onClick ? onClick() : window.open(itemUrl, '_blank'))}>
           <CardMedia
             component='img'
             image={imageSrc}
@@ -28,7 +31,7 @@ function ListItem({
             sx={{
               width: '200px',
               height: '200px',
-              borderRadius: '1rem 1rem 0 0',
+              borderRadius: flipToSide ? '0 1rem 1rem 0' : '1rem 1rem 0 0',
               ...imageStyle,
             }}
           />

@@ -44,9 +44,9 @@ code {
   cursor: all-scroll;
 }
 
-.scroll::-webkit-scrollbar {
+/* .scroll::-webkit-scrollbar {
   display: none;
-}
+} */
 
 .main {
   width: 95vw;

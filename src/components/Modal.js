@@ -16,10 +16,11 @@ function Modal({ open, onClose, title = 'Title', children }) {
         className='scroll'
         style={{
           cursor: 'unset',
-          maxWidth: isMobile ? '100vw' : 'calc(100vw - 20rem)',
-          width: '100%',
-          minHeight: isMobile ? '100vh' : '60vh',
-          maxHeight: isMobile ? '100%' : '90vh',
+          maxWidth: '100vw',
+          minWidth: isMobile ? '100vw' : '420px',
+          width: isMobile ? '100%' : 'fit-content',
+          minHeight: isMobile ? '100vh' : '420px',
+          maxHeight: isMobile ? '100vh' : '90vh',
           padding: '1rem',
           backgroundColor: 'var(--blue)',
           borderRadius: isMobile ? '0' : '1rem',
