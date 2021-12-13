@@ -22,7 +22,7 @@ import {
   getLineOptions,
   getPortfolioSeries,
 } from '../functions'
-import { ADA_SYMBOL, POLICY_ID } from '../constants'
+import { ADA_SYMBOL, GREEN, POLICY_ID, RED } from '../constants'
 import addImage from '../assets/images/add.png'
 import styles from '../styles/Charts.module.css'
 
@@ -125,7 +125,7 @@ function Portfolio({ floorData }) {
 
   const generateChartWidth = (width = window.innerWidth) => {
     const x = width - (width < 768 ? 50 : 420)
-    return x > 750 ? 750 : x
+    return x > 1700 ? 1700 : x
   }
   const [chartWidth, setChartWidth] = useState(generateChartWidth())
 
@@ -134,6 +134,9 @@ function Portfolio({ floorData }) {
     window.addEventListener('resize', handler)
     return () => window.removeEventListener('resize', handler)
   }, []) // eslint-disable-line
+
+  const chartOptions = getLineOptions(floorData, showThirtyDay)
+  const chartSeries = getPortfolioSeries(floorData, assets, showThirtyDay)
 
   return (
     <>
@@ -186,7 +189,8 @@ function Portfolio({ floorData }) {
                 <ChangeGreenRed
                   value={formatNumber(totalBalance - totalPayed)}
                   prefix={ADA_SYMBOL}
-                  scale='0.8'
+                  invert
+                  withCaret
                 />
               </div>
             </div>
@@ -208,9 +212,15 @@ function Portfolio({ floorData }) {
           </div>
           <Chart
             width={chartWidth}
-            type='line'
-            options={getLineOptions(floorData, showThirtyDay)}
-            series={getPortfolioSeries(floorData, assets, showThirtyDay)}
+            type='area'
+            options={{
+              ...chartOptions,
+              colors: [
+                'var(--blue)',
+                chartSeries[1].data[0] < chartSeries[1].data[chartSeries[1].data.length - 1] ? GREEN : RED,
+              ],
+            }}
+            series={chartSeries}
           />
         </section>
 
@@ -267,7 +277,11 @@ function Portfolio({ floorData }) {
                     <CloseRounded />
                   </IconButton>
                   <ListItem
-                    htmlToolTipContent={<div>{type} - {rarity}</div>}
+                    htmlToolTipContent={
+                      <div>
+                        {type} - {rarity}
+                      </div>
+                    }
                     style={{ margin: '1rem', backgroundColor: OPACITY_WHITE }}
                     flipToSide={isMobile}
                     name={name}

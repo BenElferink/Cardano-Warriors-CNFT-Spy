@@ -1,5 +1,5 @@
-const green = '#44b700'
-const red = '#b74400'
+import { GREEN, RED } from '../constants'
+
 const invertColor = '#f9f9f9'
 
 export default function ChangeGreenRed({
@@ -12,14 +12,14 @@ export default function ChangeGreenRed({
 }) {
   const changeColor =
     typeof value === 'number' && value > 0
-      ? green
+      ? GREEN
       : typeof value === 'number' && value < 0
-        ? red
-        : typeof value === 'string' && value.charAt(0) !== '-'
-          ? green
-          : typeof value === 'string' && value.charAt(0) === '-'
-            ? red
-            : 'unset'
+      ? RED
+      : typeof value === 'string' && value.charAt(0) !== '-'
+      ? GREEN
+      : typeof value === 'string' && value.charAt(0) === '-'
+      ? RED
+      : 'unset'
 
   const style = {
     margin: invert ? `${2 * scale}px ${4 * scale}px` : 'unset',
