@@ -10,7 +10,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Build
-      run:
+      run: |
         npm install
         npm run build
       env:
