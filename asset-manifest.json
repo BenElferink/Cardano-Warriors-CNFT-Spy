@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/cardano-warriors-cnft-spy/static/css/main.488e97ba.chunk.css",
-    "main.js": "/cardano-warriors-cnft-spy/static/js/main.cf05752b.chunk.js",
-    "main.js.map": "/cardano-warriors-cnft-spy/static/js/main.cf05752b.chunk.js.map",
+    "main.css": "/cardano-warriors-cnft-spy/static/css/main.03b2a802.chunk.css",
+    "main.js": "/cardano-warriors-cnft-spy/static/js/main.0e9c98b1.chunk.js",
+    "main.js.map": "/cardano-warriors-cnft-spy/static/js/main.0e9c98b1.chunk.js.map",
     "runtime-main.js": "/cardano-warriors-cnft-spy/static/js/runtime-main.8d24b275.js",
     "runtime-main.js.map": "/cardano-warriors-cnft-spy/static/js/runtime-main.8d24b275.js.map",
     "static/css/2.65aefc5a.chunk.css": "/cardano-warriors-cnft-spy/static/css/2.65aefc5a.chunk.css",
@@ -10,7 +10,7 @@
     "static/js/2.42a7de8e.chunk.js.map": "/cardano-warriors-cnft-spy/static/js/2.42a7de8e.chunk.js.map",
     "index.html": "/cardano-warriors-cnft-spy/index.html",
     "static/css/2.65aefc5a.chunk.css.map": "/cardano-warriors-cnft-spy/static/css/2.65aefc5a.chunk.css.map",
-    "static/css/main.488e97ba.chunk.css.map": "/cardano-warriors-cnft-spy/static/css/main.488e97ba.chunk.css.map",
+    "static/css/main.03b2a802.chunk.css.map": "/cardano-warriors-cnft-spy/static/css/main.03b2a802.chunk.css.map",
     "static/js/2.42a7de8e.chunk.js.LICENSE.txt": "/cardano-warriors-cnft-spy/static/js/2.42a7de8e.chunk.js.LICENSE.txt",
     "static/media/index.css": "/cardano-warriors-cnft-spy/static/media/cw-bg.2d72a146.png"
   },
@@ -18,7 +18,7 @@
     "static/js/runtime-main.8d24b275.js",
     "static/css/2.65aefc5a.chunk.css",
     "static/js/2.42a7de8e.chunk.js",
-    "static/css/main.488e97ba.chunk.css",
-    "static/js/main.cf05752b.chunk.js"
+    "static/css/main.03b2a802.chunk.css",
+    "static/js/main.0e9c98b1.chunk.js"
   ]
 }
