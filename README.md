@@ -2,6 +2,8 @@
 
 <img src='./docs/preview.png' />
 
+<img src='./docs/preview_portfolio.png' />
+
 This application is a free-to-use community tool for Cardano Warriors.<br />
 It is capable of following features:
 
