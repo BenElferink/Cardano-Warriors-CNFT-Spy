@@ -207,10 +207,10 @@ function Portfolio({ floorData }) {
             <div style={{ width: '42%' }} />
           </div>
           <Chart
+            width={chartWidth}
+            type='line'
             options={getLineOptions(floorData, showThirtyDay)}
             series={getPortfolioSeries(floorData, assets, showThirtyDay)}
-            type='line'
-            width={chartWidth}
           />
         </section>
 

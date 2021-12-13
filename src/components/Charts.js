@@ -4,7 +4,7 @@ import { MenuItem, Select } from '@mui/material'
 import Chart from 'react-apexcharts'
 import Toggle from './Toggle'
 import styles from '../styles/Charts.module.css'
-import { getBarOptions, getRaritySeries, getTypeSeries } from '../functions'
+import { getBarOptions, getLineOptions, getRaritySeries, getTypeSeries } from '../functions'
 
 function Charts({ warriorsData, floorData, isDesktop }) {
   const generateChartWidth = (width = window.innerWidth) => width - (isDesktop ? 750 : 70)
@@ -65,9 +65,9 @@ function Charts({ warriorsData, floorData, isDesktop }) {
       </div>
 
       <Chart
-        type='bar'
         width={chartWidth}
-        options={getBarOptions(floorData, showThirtyDay)}
+        type='line'
+        options={getLineOptions(floorData, showThirtyDay)}
         series={
           showByRarity
             ? getRaritySeries(floorData, warriorsData, selectedRarity, showThirtyDay)
