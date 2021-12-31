@@ -18,8 +18,8 @@ function Charts({ warriorsData, floorData, isDesktop }) {
 
   const [showThirtyDay, setShowThirtyDay] = useState(false)
   const [showByRarity, setShowByRarity] = useState(false)
-  const [selectedType, setSelectedType] = useLocalStorage('selectedType', 'mage')
-  const [selectedRarity, setSelectedRarity] = useLocalStorage('selectedRarity', 3)
+  const [selectedType, setSelectedType] = useLocalStorage('cw-selected-type', 'mage')
+  const [selectedRarity, setSelectedRarity] = useLocalStorage('cw-selected-rarity', 3)
 
   return (
     <section className={styles.chartContainer}>

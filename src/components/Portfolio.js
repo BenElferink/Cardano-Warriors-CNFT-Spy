@@ -30,7 +30,17 @@ const OPACITY_WHITE = 'rgba(250, 250, 250, 0.4)'
 
 function Portfolio({ floorData }) {
   const isMobile = useMediaQuery('(max-width: 768px)')
-  const [assets, setAssets] = useLocalStorage('assets', [])
+  const [assets, setAssets] = useLocalStorage('cw-assets', [])
+
+  useEffect(() => {
+    if (!assets.length) { 
+      const prevAssets = localStorage.getItem('assets')
+      if (prevAssets && prevAssets.length) {
+        setAssets(prevAssets)
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assets])
 
   const [openModal, setOpenModal] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
