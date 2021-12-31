@@ -75,7 +75,12 @@ function Portfolio({ floorData }) {
     }
 
     const {
-      onchain_metadata: { id, name, type, rarity, image },
+      onchain_metadata: {
+        name,
+        type,
+        rarity,
+        image,
+      },
     } = assetData
 
     const newDate = new Date()
@@ -87,7 +92,7 @@ function Portfolio({ floorData }) {
     const timestamp = newDate.getTime()
 
     const payload = {
-      id: Number(id),
+      id: Number(addWarriorIdTrimmed),
       name,
       type: type.toLowerCase(),
       rarity: rarity.toLowerCase(),
@@ -111,6 +116,8 @@ function Portfolio({ floorData }) {
     })
     setAdding(false)
     setOpenDrawer(false)
+    setAddWarriorId('')
+    setAddWarriorPrice('')
   }
 
   const removeAsset = (id) => {
@@ -191,7 +198,7 @@ function Portfolio({ floorData }) {
               </span>
               <div className='flex-col' style={{ marginLeft: '0.5rem' }}>
                 <ChangeGreenRed
-                  value={((100 / totalBalance) * (totalBalance - totalPayed)).toFixed(0)}
+                  value={((100 / totalBalance ? totalBalance : 100) * (totalBalance - totalPayed)).toFixed(0)}
                   suffix='%'
                   invert
                   withCaret
@@ -254,7 +261,7 @@ function Portfolio({ floorData }) {
               display: 'flex',
               flexFlow: 'row wrap',
               alignItems: 'center',
-              justifyContent: 'flex-start',
+              justifyContent: 'center',
             }}>
             {adding ? (
               <Loading />

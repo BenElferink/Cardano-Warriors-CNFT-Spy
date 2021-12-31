@@ -35,7 +35,7 @@ function ListItem({
               ...imageStyle,
             }}
           />
-          <CardContent>
+          <CardContent style={{ maxWidth: flipToSide ? '100px' : 'unset', width: '100%' }}>
             <Typography gutterBottom variant='h5'>
               {ADA_SYMBOL + price}
             </Typography>
