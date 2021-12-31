@@ -33,8 +33,8 @@ function Portfolio({ floorData }) {
   const [assets, setAssets] = useLocalStorage('cw-assets', [])
 
   useEffect(() => {
-    if (!assets.length) { 
-      const prevAssets = localStorage.getItem('assets')
+    if (assets && ((typeof assets === 'object' && !assets.length) || (typeof assets === 'string'))) { 
+      const prevAssets = JSON.parse(localStorage.getItem('assets'))
       if (prevAssets && prevAssets.length) {
         setAssets(prevAssets)
       }
