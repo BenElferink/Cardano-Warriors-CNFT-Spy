@@ -17,7 +17,7 @@ function Charts({ warriorsData, floorData, isDesktop }) {
   }, []) // eslint-disable-line
 
   const [showThirtyDay, setShowThirtyDay] = useState(false)
-  const [showByRarity, setShowByRarity] = useState(false)
+  const [showByRarity, setShowByRarity] = useState(true)
   const [selectedType, setSelectedType] = useLocalStorage('cw-selected-type', 'mage')
   const [selectedRarity, setSelectedRarity] = useLocalStorage('cw-selected-rarity', 3)
 
