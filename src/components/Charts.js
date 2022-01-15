@@ -71,7 +71,7 @@ function Charts({ warriorsData, floorData, isDesktop }) {
         series={
           showByRarity
             ? getRaritySeries(floorData, warriorsData, selectedRarity, showThirtyDay)
-            : getTypeSeries(floorData[selectedType], showThirtyDay)
+            : getTypeSeries(floorData[selectedType], selectedType, showThirtyDay)
         }
       />
     </section>

@@ -1,6 +1,6 @@
-function getTypeSeries(typeObjects, isMonth = false) {
+function getTypeSeries(typeObjects, type, isMonth = false) {
   const payload = {
-    name: typeObjects[0].type,
+    name: type,
     data: typeObjects.map((obj) => obj.floor),
   }
 
