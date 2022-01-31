@@ -22,7 +22,7 @@ const crawlCNFT = (options = {}) => {
 
   return new Promise((resolve, reject) => {
     Axios.post(ENDPOINT, payload, { headers: { 'Content-Type': 'application/json' } })
-      .then((response) => resolve(response.data.results))
+      .then((response) => resolve(response.data.results.filter((item) => item.assets.length === 1)))
       .catch((error) => reject(error))
   })
 }
@@ -50,7 +50,7 @@ function runCronJob() {
       // (reminder: data is fetched by sorted price, 1st item found is the floor)
       for (let i = index; i < preFetchedData.length; i++) {
         const preFetchedWarrior = preFetchedData[i]
-        if (warriorType === preFetchedWarrior.asset.metadata.type.toLowerCase()) {
+        if (warriorType === preFetchedWarrior.assets[0].metadata.type.toLowerCase()) {
           return preFetchedWarrior
         }
       }

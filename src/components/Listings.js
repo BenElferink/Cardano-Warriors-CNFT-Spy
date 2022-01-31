@@ -89,12 +89,12 @@ function Listings({ title = 'Listings', options = {} }) {
           data.map((listing) => (
             <ListItem
               key={`${title}-${listing._id}`}
-              name={listing.asset.metadata.name}
+              name={listing.assets[0].metadata.name}
               price={listing.price / 1000000}
-              imageSrc={getImageFromIPFS(listing.asset.metadata.image)}
+              imageSrc={getImageFromIPFS(listing.assets[0].metadata.image)}
               itemUrl={
                 options.sold
-                  ? `https://pool.pm/${listing.asset.unit}`
+                  ? `https://pool.pm/${listing.assets[0].unit}`
                   : `https://cnft.io/token/${listing._id}`
               }
               spanArray={[`Listed: ${new Date(listing.createdAt).toLocaleString()}`]}
@@ -111,17 +111,17 @@ function Listings({ title = 'Listings', options = {} }) {
               htmlToolTipContent={
                 <Fragment>
                   <Typography variant='body2'>
-                    {listing.asset.metadata.type} - {listing.asset.metadata.rarity}
+                    {listing.assets[0].metadata.type} - {listing.assets[0].metadata.rarity}
                   </Typography>
                   <br />
-                  {listing.asset.metadata.traits.map((trait) => (
+                  {listing.assets[0].metadata.traits.map((trait) => (
                     <Fragment key={`${title}-${listing._id}-${trait}`}>
                       <Typography variant='body3'>{trait}</Typography>
                       <br />
                     </Fragment>
                   ))}
                   <br />
-                  {listing.asset.metadata.items.map((item) => (
+                  {listing.assets[0].metadata.items.map((item) => (
                     <Fragment key={`${title}-${listing._id}-${item.name}`}>
                       <Typography variant='body3'>
                         {item.name} - {item.rarity}
