@@ -16,10 +16,10 @@ function Charts({ warriorsData, floorData, isDesktop }) {
     return () => window.removeEventListener('resize', handler)
   }, []) // eslint-disable-line
 
-  const [showThirtyDay, setShowThirtyDay] = useState(false)
+  const [showThirtyDay, setShowThirtyDay] = useState(true)
   const [showByRarity, setShowByRarity] = useState(true)
+  const [selectedRarity, setSelectedRarity] = useLocalStorage('cw-selected-rarity', 0)
   const [selectedType, setSelectedType] = useLocalStorage('cw-selected-type', 'mage')
-  const [selectedRarity, setSelectedRarity] = useLocalStorage('cw-selected-rarity', 3)
 
   return (
     <section className={styles.chartContainer}>
