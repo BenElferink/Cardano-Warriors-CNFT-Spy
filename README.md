@@ -1,4 +1,4 @@
-# Cardano Warriors CNFT Spy
+# Cardano Warriors CNFT Spy (deprecated)
 
 <img src='./docs/preview.png' />
 
@@ -19,8 +19,8 @@ But there is a `data` folder which is detached from the application. It contains
 
 ## Access AWS virtual machine
 
-1. You need to obtain a private key (`.pem` file)
-2. Access the VM via SSH: `ssh -i "${FILE_NAME}.pem" ubuntu@ec2-18-218-36-170.us-east-2.compute.amazonaws.com`
-3. If you need to clone the repo again for some reason, make sure to apply your GitHub token so the bot can read and write data: `git clone https://${GITHUB_TOKEN}@github.com/belferink1996/cardano-warriors-cnft-spy.git`
-4. Run `cd ./cardano-warriors-cnft-spy/data`
-5. Run `npm start`
+1. <strike>You need to obtain a private key (`.pem` file)</strike>
+2. <strike>Access the VM via SSH: `ssh -i "${FILE_NAME}.pem" ubuntu@ec2-18-218-36-170.us-east-2.compute.amazonaws.com`</strike>
+3. <strike>If you need to clone the repo again for some reason, make sure to apply your GitHub token so the bot can read and write data: `git clone https://${GITHUB_TOKEN}@github.com/belferink1996/cardano-warriors-cnft-spy.git`</strike>
+4. <strike>Run `cd ./cardano-warriors-cnft-spy/data`</strike>
+5. <strike>Run `npm start`</strike>
